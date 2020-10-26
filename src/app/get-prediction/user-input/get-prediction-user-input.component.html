@@ -1,0 +1,32 @@
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header card-header-danger">
+            <h4 class="card-title">Prediction Parameters</h4>
+            <p class="card-category">Specify the triage criteria</p>
+          </div>
+          <div class="card-body">
+            <form>
+            <label>Urgent Patient Criteria</label>
+              <div class="row">
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Target Service Percentage (%)" type="text"  (keyup)="onKeyUrgentPatientPercentageInput($event)">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="example-full-width">
+                    <input matInput placeholder="Visitation deadline" type="text" (keyup)="onKeyDeadlineInput($event)">
+                  </mat-form-field>
+                </div>
+              </div>
+              <button mat-raised-button type="submit" class="btn btn-danger pull-right" (click)="getPrediction()">Get Prediction</button>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
