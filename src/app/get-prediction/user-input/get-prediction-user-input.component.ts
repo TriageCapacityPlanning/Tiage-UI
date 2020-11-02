@@ -15,14 +15,19 @@ export class GetPredictionUserInputComponent implements OnInit {
   percetageOfUrgentPatients: string = '';
   percetageOfSemiUrgentPatients: string = '';
   percetageOfStandardPatients: string = '';
+  dailySlotsAvailable: string = '';
 
   constructor(private http: HttpService, private getPredictionService: GetPredictionService) { }
 
   ngOnInit(): void {
   }
 
-  onKeyDeadlineInput(event: any) {
+  onKeyPredictionLengthInDays(event: any) {
     this.predictionLengthInDays = event.target.value;
+  }
+
+  onKeyDailySlotsAvailable(event: any) {
+    this.dailySlotsAvailable = event.target.value;
   }
 
   onKeyUrgentPatientPercentageInput(event: any) {
@@ -33,15 +38,16 @@ export class GetPredictionUserInputComponent implements OnInit {
     this.percetageOfSemiUrgentPatients = event.target.value;
   }
 
-  onKeyStandardUrgentPatientPercentageInput(event: any) {
+  onKeyStandardPatientPercentageInput(event: any) {
     this.percetageOfStandardPatients = event.target.value;
   }
 
   getPrediction() {
-    const endpoint = 'localhost:5000';
+    const endpoint = 'http://localhost:5000/predict';
     const queryParams: Object = parseParams({
       predictionLengthDays: this.predictionLengthInDays,
-      percentageOfUrgentPatients: this.percetageOfUrgentPatients
+      percentageOfUrgentPatients: this.percetageOfUrgentPatients,
+      dailySlotsAvailable: this.dailySlotsAvailable
     });
     const url = `${endpoint}?${queryParams}`;
     this.http.getPrediction(url)
