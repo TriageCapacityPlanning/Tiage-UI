@@ -14,6 +14,11 @@
                   <input matInput placeholder="prediction length (in days)" type="text" (keyup)="onKeyDeadlineInput($event)">
                 </mat-form-field>
               </span>
+              <span>
+                <mat-form-field class="example-full-width">
+                  <input matInput placeholder="daily slots available" type="text" (keyup)="onKeyDailySlotsAvailable($event)">
+                </mat-form-field>
+              </span>
             <label>Urgent Patient Criteria</label>
               <div class="row">
                 <div class="col-md-6">
