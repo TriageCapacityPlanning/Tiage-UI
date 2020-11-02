@@ -1,6 +1,9 @@
 
   <div class="container-fluid" *ngIf="predictionResults">
     <div class="row">
+        <h3>Prediction Results</h3>
+    </div>
+    <div class="row">
         <!-- <div class="col-lg-3 col-md-6 col-sm-6">
             <div class="card card-stats">
                 <div class="card-header card-header-warning card-header-icon">
@@ -38,14 +41,14 @@
         </div> -->
         <div class="col-lg-5 col-md-6 col-sm-6">
             <div class="card card-stats">
-                <div class="card-header card-header-info card-header-icon">
+                <div class="card-header card-header-dark card-header-icon">
                     <div class="card-icon">
                         <i class="material-icons">info_outline</i>
                     </div>
                     <p class="card-category">Totals</p>
                     <br>
-                    <h3 class="card-title">Total slots needed: {{predictionResults.numberSlotsNeeded}}</h3>
-                    <h3 class="card-title">Total patients per week: {{predictionResults.totalPatientsPerWeek}}</h3>
+                    <h3 class="card-title">Total slots needed: {{predictionResults.totalSlots}}</h3>
+                    <h3 class="card-title">Total patients: {{predictionResults.totalPatients}}</h3>
                 </div>
                 <div class="card-footer">
                     <div class="stats">
@@ -72,14 +75,61 @@
         </div> -->
     </div>
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-4">
             <div class="card card-chart">
                 <div class="card-header card-header-danger">
                     <div class="ct-chart" id="completedTasksChart"></div>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">Expected Urgent Patients</h4>
-                    <p class="card-category">{{predictionResults.patientsNeededByType.urgent}} </p>
+                    <h4 class="card-title">Urgent Patients</h4>
+                    <p class="card-category">Expected patients</p>
+                    <p>{{predictionResults.expectedPatientsPerTriageClass.urgent}} </p>
+                    <p class="card-category">Slots needed</p>
+                    <p>{{predictionResults.slotsPerTriageClass.urgent}} </p>
+                    <p class="card-category">Percentage (%) patients seen</p>
+                    <p>{{predictionResults.patientsSeenPercentage.urgent * 100}}%</p>
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        <i class="material-icons">access_time</i> campaign sent 2 days ago
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <div class="card card-chart">
+                <div class="card-header card-header-warning">
+                    <div class="ct-chart" id="completedTasksChart"></div>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">Semi-Urgent Patients</h4>
+                    <p class="card-category">Expected patients</p>
+                    <p>{{predictionResults.expectedPatientsPerTriageClass['semi-urgent']}} </p>
+                    <p class="card-category">Slots needed</p>
+                    <p>{{predictionResults.slotsPerTriageClass['semi-urgent']}} </p>
+                    <p class="card-category">Percentage (%) patients seen</p>
+                    <p>{{predictionResults.patientsSeenPercentage['semi-urgent'] * 100}}%</p>
+                </div>
+                <div class="card-footer">
+                    <div class="stats">
+                        <i class="material-icons">access_time</i> campaign sent 2 days ago
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <div class="card card-chart">
+                <div class="card-header card-header-success">
+                    <div class="ct-chart" id="completedTasksChart"></div>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">Standard Patients</h4>
+                    <p class="card-category">Expected patients</p>
+                    <p>{{predictionResults.expectedPatientsPerTriageClass.standard}} </p>
+                    <p class="card-category">Slots needed</p>
+                    <p>{{predictionResults.slotsPerTriageClass.standard}} </p>
+                    <p class="card-category">Percentage (%) patients seen</p>
+                    <p>{{predictionResults.patientsSeenPercentage.standard * 100}}%</p>
                 </div>
                 <div class="card-footer">
                     <div class="stats">

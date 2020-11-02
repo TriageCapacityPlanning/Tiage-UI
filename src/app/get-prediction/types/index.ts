@@ -1,10 +1,12 @@
 export type PredictionResults = {
-    totalPatientsPerWeek: number;
-    numberSlotsNeeded:number;
-    patientsNeededByType: PatientsNeededByType;
+    totalPatients: number;
+    expectedPatientsPerTriageClass: TriageClassCounts;
+    slotsPerTriageClass: TriageClassCounts;
+    totalSlots: number;
+    patientsSeenPercentage: TriageClassCounts;
 }
 
-export type PatientsNeededByType = {
+export type TriageClassCounts = {
     urgent: number;
     ['semi-urgent']?: number;
     standard?: number;
