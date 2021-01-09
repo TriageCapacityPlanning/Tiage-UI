@@ -1,34 +1,77 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-12">
         <div class="card">
-          <div class="card-header card-header-info">
-            <h4 class="card-title">Prediction Parameters</h4>
-            <p class="card-category">Specify the triage criteria</p>
+          <div class="card-header text-white bg-dark">
+            <h4 class="card-title text-white">Prediction Parameters</h4>
+            <p class="card-category text-white">Specify the triage criteria</p>
           </div>
           <div class="card-body">
-            <form>
+            <form [formGroup]="predictionForm">
               <span>
-                <mat-form-field class="example-full-width">
-                  <input matInput placeholder="prediction length (in days)" type="text" (keyup)="onKeyDeadlineInput($event)">
+                <mat-form-field appearance="fill">
+                  <mat-label>Prediction range</mat-label>
+                  <mat-date-range-input formGroupName="dateRange" [rangePicker]="picker" required>
+                    <input matStartDate formControlName="start" placeholder="MM/DD/YYYY">
+                    <input matEndDate formControlName="end" placeholder="MM/DD/YYYY">
+                  </mat-date-range-input>
+                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-date-range-picker #picker></mat-date-range-picker>
+                  <mat-error *ngIf="formControls.dateRange.controls.start.hasError('matStartDateInvalid') || formControls.dateRange.controls.start.invalid">Invalid start date</mat-error>
+                  <mat-error *ngIf="formControls.dateRange.controls.end.hasError('matEndDateInvalid') || formControls.dateRange.controls.end.invalid">Invalid end date</mat-error>
+                  
                 </mat-form-field>
+                
               </span>
-              <span>
-                <mat-form-field class="example-full-width">
-                  <input matInput placeholder="daily slots available" type="text" (keyup)="onKeyDailySlotsAvailable($event)">
-                </mat-form-field>
-              </span>
-            <label>Urgent Patient Criteria</label>
-              <div class="row">
-                <div class="col-md-6">
-                  <mat-form-field class="example-full-width">
-                    <input matInput placeholder="Target Service Percentage (%)" type="text"  (keyup)="onKeyUrgentPatientPercentageInput($event)">
-                  </mat-form-field>
+              <div formArrayName="triageClassesOptions">
+                <div *ngFor="let triageClass of triageClasses; let i=index" [formGroupName]="i">
+                  <span>
+                    <mat-label>{{triageClass}} Patient Criteria</mat-label>
+                    <div class="row form-{{triageClass}}">
+                      <div class="col-md-5">
+                        <mat-form-field class="example-full-width" [floatLabel]="floatLabelControl.value">
+                          <mat-label >Minimum Service Percent (%)</mat-label>
+                          <input required matInput type="number"
+                             formControlName="minServicePercent">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-3">
+                        <mat-form-field class="example-full-width" [floatLabel]="floatLabelControl.value">
+                          <mat-label >Time window</mat-label>
+                          <input required matInput type="number" formControlName="timeWindow">
+                        </mat-form-field>
+                      </div>
+                      <div class="col-md-2">
+                        <mat-form-field matInput required class="example-full-width">
+                          <mat-label>Unit Time</mat-label>
+                          <mat-select formControlName="timeUnit">
+                            <mat-option value="week">Week(s)</mat-option>
+                            <mat-option value="day">Day(s)</mat-option>
+                            <mat-option value="month">Month(s)</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>
+                  </span>
+  
                 </div>
               </div>
-              <button mat-raised-button type="submit" class="btn btn-info pull-right" (click)="getPrediction()">Get Prediction</button>
-
+              <span>
+                <div class="row">
+                  <div class="col-md-5">
+                    <mat-form-field class="example-full-width" [floatLabel]="floatLabelControl.value">
+                      <mat-label>Confidence-level (0-100%)</mat-label>
+                      <input matInput required matInput placeholder="95" (keyup)="onKeyUrgentPatientPercentageInput($event)"
+                      formControlName="confidence" type="number" >
+                    </mat-form-field>
+                    <mat-error *ngIf="formControls.confidence.errors?.min">Input must be non-negative</mat-error>
+                    <mat-error *ngIf="formControls.confidence.errors?.max">Input must be less than or equal to 100</mat-error>
+                  </div>
+                </div>
+              </span>
+              {{formControls.confidence.controls}}
+              <button mat-raised-button type="submit" class="btn bg-primary text-white pull-right" (click)="getPrediction()">Get Prediction</button>
             </form>
           </div>
         </div>

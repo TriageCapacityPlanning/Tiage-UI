@@ -1,8 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import { PredictionResults } from '../types';
 import { HttpService } from '../../http-get.service';
 import { GetPredictionService } from '../get-prediction.service';
 import { parseParams } from '../../util';
+
+const triageClasses: string[] = ['Urgent', 'Semi-Urgent', 'Standard'];
 
 @Component({
   selector: 'app-prediction-user-input',
@@ -16,10 +19,50 @@ export class GetPredictionUserInputComponent implements OnInit {
   percetageOfSemiUrgentPatients: string = '';
   percetageOfStandardPatients: string = '';
   dailySlotsAvailable: string = '';
+  date: string = '';
+  triageClasses: string[] = [];
+  // form variables
+  options: FormGroup;
+  predictionForm: FormGroup;
+  triageClassForms = new Object();
+  oneDay = 24 * 60 * 60 * 1000;
+  submitted: boolean = false;
+  // calendar form
+  floatLabelControl = new FormControl('auto');
 
-  constructor(private http: HttpService, private getPredictionService: GetPredictionService) { }
+  constructor(private http: HttpService, private getPredictionService: GetPredictionService, private fb: FormBuilder) {
+    this.options = fb.group({
+      floatLabel: this.floatLabelControl,
+    })
+  }
 
   ngOnInit(): void {
+    this.triageClasses = triageClasses;
+    // dynamically load each triage class form option
+    //this.triageClassesOptions = {}
+    this.predictionForm = this.fb.group({
+      dateRange: this.fb.group({
+        start: this.fb.control,
+        end: this.fb.control
+      }),
+      confidence: this.fb.control('', [Validators.required, Validators.min(0), Validators.max(100)]),
+      triageClassesOptions: this.fb.array(
+        this.triageClasses.map((triageClass: string) => this.fb.group({
+          minServicePercent: this.fb.control('', [Validators.required]),
+          timeWindow: this.fb.control('', [Validators.required]),
+          timeUnit: this.fb.control('', [Validators.required]),
+        }))
+      )
+    })
+    console.log(this.predictionForm.controls.triageClassesOptions)
+  }
+
+  get formControls() {
+    return this.predictionForm.controls;
+  }
+
+  onKeyUpDateRange(event: any) {
+    console.log(this.predictionForm)
   }
 
   onKeyPredictionLengthInDays(event: any) {
