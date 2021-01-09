@@ -1,8 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
 import * as Chartist from 'chartist';
-import {PredictionResults} from '../types';
+import {PredictionResults, SlotPredictions, TriageClassCount} from '../types';
 import {GetPredictionService} from '../get-prediction.service';
 import {Subscription} from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
+
+
+// TODO - get input dynamically from API
+const triageClasses: string[] = ['urgent', 'semi-urgent', 'standard'];
 
 @Component({
   selector: 'app-prediction-results',
@@ -11,73 +16,71 @@ import {Subscription} from 'rxjs';
 })
 export class PredictionResultsComponent implements OnInit {
 
+  triageClasses: string[];
+  displayedIntervalColumns: string[];
+  displayedtcIntervalColumns: string[] = ['intervalNo', 'startDate', 'endDate', 'slots', 'stdDev'];
   @Input() predictionResults: PredictionResults;
+  summaryIntervalPredictions: MatTableDataSource<SlotPredictions>;
+  tcIntervalPredictions: MatTableDataSource<SlotPredictions>[]; 
   subscription: Subscription;
+  loaded: boolean = false;
 
   constructor(private getPredictionServce: GetPredictionService) {
     this.subscription = this.getPredictionServce.predictionResults$.subscribe(
       predictionResults => {
+        this.loaded = true;
         this.predictionResults = predictionResults;
+        this.summaryIntervalPredictions = this.translateSummaryIntervalsToTables(predictionResults.intervaledSlotPredictions);
+        console.log('----')
+        console.log(this.summaryIntervalPredictions);
+        this.tcIntervalPredictions = this.translateTCIntervalToTable(predictionResults.intervaledSlotPredictions);
+        console.log('----')
+        console.log(this.tcIntervalPredictions);
       }
     )
   }
-  startAnimationForLineChart(chart){
-      let seq: any, delays: any, durations: any;
-      seq = 0;
-      delays = 80;
-      durations = 500;
 
-      chart.on('draw', function(data) {
-        if(data.type === 'line' || data.type === 'area') {
-          data.element.animate({
-            d: {
-              begin: 600,
-              dur: 700,
-              from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
-              to: data.path.clone().stringify(),
-              easing: Chartist.Svg.Easing.easeOutQuint
-            }
-          });
-        } else if(data.type === 'point') {
-              seq++;
-              data.element.animate({
-                opacity: {
-                  begin: seq * delays,
-                  dur: durations,
-                  from: 0,
-                  to: 1,
-                  easing: 'ease'
-                }
-              });
-          }
-      });
-
-      seq = 0;
-  };
-  startAnimationForBarChart(chart){
-      let seq2: any, delays2: any, durations2: any;
-
-      seq2 = 0;
-      delays2 = 80;
-      durations2 = 500;
-      chart.on('draw', function(data) {
-        if(data.type === 'bar'){
-            seq2++;
-            data.element.animate({
-              opacity: {
-                begin: seq2 * delays2,
-                dur: durations2,
-                from: 0,
-                to: 1,
-                easing: 'ease'
-              }
-            });
+  translateTCIntervalToTable(intervaledSlotPredictions: SlotPredictions[]) {
+    const tcIntervalData = this.triageClasses.map((triageClass: string, tcIndex: number) => {
+      const intervalData = intervaledSlotPredictions.map((prediction: SlotPredictions, index: number) => {
+        const tempPrediction: any = {};
+        tempPrediction.startDate = prediction.startDate.toLocaleDateString('en-US');
+        tempPrediction.endDate = prediction.endDate.toLocaleDateString('en-US');
+        const triageClass = this.triageClasses[tcIndex];
+        console.log(triageClass, (<TriageClassCount>prediction[triageClass]).slots)
+        tempPrediction.slots = (<TriageClassCount>prediction[triageClass]).slots;
+        tempPrediction.stdDev = (<TriageClassCount>prediction[triageClass]).stdDev;
+        return {
+          intervalNo: index+1,
+          ...tempPrediction
         }
       });
+      return new MatTableDataSource(intervalData);
+    })
+    return tcIntervalData;
+  }
 
-      seq2 = 0;
-  };
+  translateSummaryIntervalsToTables(intervaledSlotPredictions: SlotPredictions[]) {
+    const intervalData = intervaledSlotPredictions.map((prediction: SlotPredictions, index: number) => {
+      const tempPrediction: any = {...prediction};
+      tempPrediction.startDate = tempPrediction.startDate.toLocaleDateString('en-US');
+      tempPrediction.endDate = tempPrediction.endDate.toLocaleDateString('en-US');
+      return {
+        intervalNo: index+1,
+        ...tempPrediction
+      }
+    });
+    return new MatTableDataSource(intervalData);
+  }
   ngOnInit() {
+    this.triageClasses = triageClasses;
+    this.displayedIntervalColumns = [
+      'intervalNo',
+      'startDate',
+      'endDate',
+      ...this.triageClasses
+    ]
+
     //   /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 
     //   const dataDailySalesChart: any = {
@@ -158,5 +161,62 @@ export class PredictionResultsComponent implements OnInit {
     //   //start animation for the Emails Subscription Chart
     //   this.startAnimationForBarChart(websiteViewsChart);
   }
+
+  startAnimationForLineChart(chart){
+      let seq: any, delays: any, durations: any;
+      seq = 0;
+      delays = 80;
+      durations = 500;
+
+      chart.on('draw', function(data) {
+        if(data.type === 'line' || data.type === 'area') {
+          data.element.animate({
+            d: {
+              begin: 600,
+              dur: 700,
+              from: data.path.clone().scale(1, 0).translate(0, data.chartRect.height()).stringify(),
+              to: data.path.clone().stringify(),
+              easing: Chartist.Svg.Easing.easeOutQuint
+            }
+          });
+        } else if(data.type === 'point') {
+              seq++;
+              data.element.animate({
+                opacity: {
+                  begin: seq * delays,
+                  dur: durations,
+                  from: 0,
+                  to: 1,
+                  easing: 'ease'
+                }
+              });
+          }
+      });
+
+      seq = 0;
+  };
+  startAnimationForBarChart(chart){
+      let seq2: any, delays2: any, durations2: any;
+
+      seq2 = 0;
+      delays2 = 80;
+      durations2 = 500;
+      chart.on('draw', function(data) {
+        if(data.type === 'bar'){
+            seq2++;
+            data.element.animate({
+              opacity: {
+                begin: seq2 * delays2,
+                dur: durations2,
+                from: 0,
+                to: 1,
+                easing: 'ease'
+              }
+            });
+        }
+      });
+
+      seq2 = 0;
+  };
 
 }

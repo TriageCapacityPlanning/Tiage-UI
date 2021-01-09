@@ -4,14 +4,16 @@ export type PredictionResults = {
     slotPredictions: SlotPredictions
 }
 
-export type TriageClassCounts = {
-    [index: string]: number | Date;
+
+export type TriageClassCount  = { slots: number, stdDev: number }
+
+export type TriageClassCountsWrapper = {
+    [index: string]: TriageClassCount | number | Date;
 }
 
 export type SlotPredictions = {
     startDate: Date,
     endDate: Date,
     confidence: number,
-    standardDeviation: number,
     total: number
-} & TriageClassCounts;
+} & TriageClassCountsWrapper;

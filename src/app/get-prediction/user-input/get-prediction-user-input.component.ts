@@ -137,7 +137,8 @@ export class GetPredictionUserInputComponent implements OnInit {
           break;
         }
         default: {
-          throw new Error('TODO')
+          timeInWeeks = parseFloat(triageClassOptions.timeWindow)/7;
+          // throw new Error('TODO')
         }
       }
       // set post request body key for service window
@@ -172,21 +173,30 @@ export class GetPredictionUserInputComponent implements OnInit {
             endDate: new Date('February 2030'),
             confidence: 95.0,
             standardDeviation: 2,
-            total: 25 + 30 + 22,
-            urgent: 25,
-            'semi-urgent': 30,
-            standard: 22,
+            total: 25 + 30 + 30,
+            urgent: { slots: 25, stdDev: 2},
+            'semi-urgent': { slots: 30, stdDev: 2},
+            standard: { slots: 30, stdDev: 2},
+          }, {
+            startDate: new Date('January 2030'),
+            endDate: new Date('March 2030'),
+            confidence: 95.0,
+            standardDeviation: 2,
+            total: 14 + 10 + 20,
+            urgent: { slots: 14, stdDev: 1},
+            'semi-urgent': { slots: 10, stdDev: 0.5},
+            standard: { slots: 20, stdDev: 2},
           }],
           numberIntervals: 2,
           slotPredictions: {
             startDate: new Date('January 2030'),
-            endDate: new Date('February 2030'),
+            endDate: new Date('March 2030'),
             confidence: 95.0,
             standardDeviation: 2,
-            total: 25 + 30 + 22,
-            urgent: 25,
-            'semi-urgent': 30,
-            standard: 22,
+            total: (25 + 30 + 30)+(14 + 10 + 20),
+            urgent: { slots: 25 + 14, stdDev: 2},
+            'semi-urgent': { slots: 30 + 10, stdDev: 2},
+            standard: { slots: 30 + 20, stdDev: 2},
           }
 
         }
