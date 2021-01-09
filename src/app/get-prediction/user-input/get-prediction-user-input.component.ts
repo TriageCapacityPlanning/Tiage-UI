@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import { Component, Input, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, FormControl, Validators, Form} from '@angular/forms';
 import { PredictionResults } from '../types';
 import { HttpService } from '../../http-get.service';
 import { GetPredictionService } from '../get-prediction.service';
-import { parseParams } from '../../util';
+import { PredictionRequestBody } from './requestTypes';
 
+// TODO - get input dynamically from API
 const triageClasses: string[] = ['Urgent', 'Semi-Urgent', 'Standard'];
 
 @Component({
@@ -14,13 +15,14 @@ const triageClasses: string[] = ['Urgent', 'Semi-Urgent', 'Standard'];
 })
 export class GetPredictionUserInputComponent implements OnInit {
 
-  predictionLengthInDays: string = '';
-  percetageOfUrgentPatients: string = '';
-  percetageOfSemiUrgentPatients: string = '';
-  percetageOfStandardPatients: string = '';
-  dailySlotsAvailable: string = '';
-  date: string = '';
   triageClasses: string[] = [];
+  // api request parameters
+  csvFile: string;
+
+  // form constants
+  week = 'week';
+  day = 'day';
+
   // form variables
   options: FormGroup;
   predictionForm: FormGroup;
@@ -29,6 +31,9 @@ export class GetPredictionUserInputComponent implements OnInit {
   submitted: boolean = false;
   // calendar form
   floatLabelControl = new FormControl('auto');
+  // File uploa
+  @ViewChild('fileInput') fileInput: ElementRef;
+  fileAttr = 'Choose File';
 
   constructor(private http: HttpService, private getPredictionService: GetPredictionService, private fb: FormBuilder) {
     this.options = fb.group({
@@ -39,84 +44,151 @@ export class GetPredictionUserInputComponent implements OnInit {
   ngOnInit(): void {
     this.triageClasses = triageClasses;
     // dynamically load each triage class form option
-    //this.triageClassesOptions = {}
     this.predictionForm = this.fb.group({
-      dateRange: this.fb.group({
+      predictionDateRange: this.fb.group({
         start: this.fb.control,
         end: this.fb.control
       }),
-      confidence: this.fb.control('', [Validators.required, Validators.min(0), Validators.max(100)]),
+      confidence: this.fb.control(null, [Validators.required, Validators.min(0), Validators.max(100)]),
       triageClassesOptions: this.fb.array(
         this.triageClasses.map((triageClass: string) => this.fb.group({
           minServicePercent: this.fb.control('', [Validators.required]),
           timeWindow: this.fb.control('', [Validators.required]),
           timeUnit: this.fb.control('', [Validators.required]),
         }))
-      )
+      ),
+      intervalDateRanges: this.fb.array([])
     })
-    console.log(this.predictionForm.controls.triageClassesOptions)
-  }
-
-  get formControls() {
-    return this.predictionForm.controls;
-  }
-
-  onKeyUpDateRange(event: any) {
+    this.addIntervalDateRange();
     console.log(this.predictionForm)
   }
 
-  onKeyPredictionLengthInDays(event: any) {
-    this.predictionLengthInDays = event.target.value;
+  // Form controls
+  get rootFormControls() {
+    return this.predictionForm.controls;
   }
 
-  onKeyDailySlotsAvailable(event: any) {
-    this.dailySlotsAvailable = event.target.value;
+  get intervalFormControls() {
+    return <FormArray>this.rootFormControls.intervalDateRanges;
   }
 
-  onKeyUrgentPatientPercentageInput(event: any) {
-    this.percetageOfUrgentPatients = event.target.value;
+  addIntervalDateRange() {
+    const formControl = this.intervalFormControls;
+    formControl.push(this.fb.group({
+      start: this.fb.control,
+      end: this.fb.control
+    }))
   }
 
-  onKeySemiUrgentPatientPercentageInput(event: any) {
-    this.percetageOfSemiUrgentPatients = event.target.value;
+  removeIntervalDateRange(i: number) {
+    const formControl = this.intervalFormControls;
+    formControl.removeAt(i);
   }
 
-  onKeyStandardPatientPercentageInput(event: any) {
-    this.percetageOfStandardPatients = event.target.value;
+  resetIntervalDateRange(i: number) {
+    const formControl = this.intervalFormControls;
+    formControl.clear();
+    this.addIntervalDateRange();
+
+  }
+
+  csvListener(files: FileList){
+    console.log(files);
+    if(files && files.length > 0) {
+       let file : File = files.item(0); 
+         console.log(file.name);
+         console.log(file.size);
+         console.log(file.type);
+         let reader: FileReader = new FileReader();
+         reader.readAsText(file);
+         reader.onload = (e) => {
+            this.csvFile = reader.result as string;
+            console.log(this.csvFile);
+         }
+      }
   }
 
   getPrediction() {
-    const endpoint = 'http://localhost:5000/predict';
-    const queryParams: Object = parseParams({
-      predictionLengthDays: this.predictionLengthInDays,
-      percentageOfUrgentPatients: this.percetageOfUrgentPatients,
-      dailySlotsAvailable: this.dailySlotsAvailable
-    });
+    this.submitted = true;
+    const endpoint = 'http://localhost:5000/predict?';
+    console.log(this.predictionForm)
+
+    const formValues = this.predictionForm.value;
+
+    // set the triage class query parameters
+    const triageClassQueryParams = {};
+    // assume in the same order as the triage class user list
+    (<Object[]>formValues.triageClassesOptions).forEach((triageClassOptions: {
+      timeUnit: string,
+      timeWindow: string,
+      minServicePercent: string
+    }, index: number) => {
+      const paramType: string = this.triageClasses[index].toLowerCase();
+      // set post request body key for min service percent
+      const minServicePercentParam: string = `${paramType}-service-percent=`;
+      let timeInWeeks: number | undefined;
+      switch (triageClassOptions.timeUnit) {
+        case this.week: {
+          timeInWeeks = parseFloat(triageClassOptions.timeWindow);
+          break;
+        }
+        case this.day: {
+          timeInWeeks = parseFloat(triageClassOptions.timeWindow)/7;
+          break;
+        }
+        default: {
+          throw new Error('TODO')
+        }
+      }
+      // set post request body key for service window
+      const windowParam: string = `${paramType}-window=${timeInWeeks}`;
+      // set the query parameters key-value pair
+      triageClassQueryParams[minServicePercentParam] = triageClassOptions.minServicePercent;
+      triageClassQueryParams[windowParam] = timeInWeeks.toString();
+    })
+
+
+    const queryParams: PredictionRequestBody = {
+      'start-date': formValues.predictionDateRange.start,
+      'end-date': formValues.predictionDateRange.end,
+      'confidence': formValues.confidence || 95,
+      'num-sim-runs': formValues.numSimRuns || 1000,
+      ...triageClassQueryParams
+    }
+
+    if (this.csvFile) {
+      queryParams.waitlistcsv = this.csvFile;
+    }
     const url = `${endpoint}?${queryParams}`;
-    this.http.getPrediction(url)
+    this.http.getPrediction(url, queryParams)
       .subscribe((data: any) => {
         this.getPredictionService.setPredictionResults({ ...data });
       },
       (error: any) => {
-        const predictionResults: PredictionResults = {
-          totalPatients: 30,
-          totalSlots: 10,
-          expectedPatientsPerTriageClass: {
-            urgent: 5,
-            'semi-urgent': 3,
+        const predictionResults: PredictionResults & {_url: string}= {
+          _url: 'test',
+          intervaledSlotPredictions: [{
+            startDate: new Date('January 2030'),
+            endDate: new Date('February 2030'),
+            confidence: 95.0,
+            standardDeviation: 2,
+            total: 25 + 30 + 22,
+            urgent: 25,
+            'semi-urgent': 30,
             standard: 22,
-          },
-          slotsPerTriageClass: {
-            urgent: 5,
-            'semi-urgent': 3,
-            standard: 2,
-            
-          },
-          patientsSeenPercentage: {
-            urgent: 1,
-            'semi-urgent': 1,
-            standard: 0.1
+          }],
+          numberIntervals: 2,
+          slotPredictions: {
+            startDate: new Date('January 2030'),
+            endDate: new Date('February 2030'),
+            confidence: 95.0,
+            standardDeviation: 2,
+            total: 25 + 30 + 22,
+            urgent: 25,
+            'semi-urgent': 30,
+            standard: 22,
           }
+
         }
         this.getPredictionService.setPredictionResults(predictionResults);
       }

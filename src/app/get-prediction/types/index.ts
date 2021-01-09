@@ -1,13 +1,17 @@
 export type PredictionResults = {
-    totalPatients: number;
-    expectedPatientsPerTriageClass: TriageClassCounts;
-    slotsPerTriageClass: TriageClassCounts;
-    totalSlots: number;
-    patientsSeenPercentage: TriageClassCounts;
+    intervaledSlotPredictions: SlotPredictions[],
+    numberIntervals: number,
+    slotPredictions: SlotPredictions
 }
 
 export type TriageClassCounts = {
-    urgent: number;
-    ['semi-urgent']?: number;
-    standard?: number;
+    [index: string]: number | Date;
 }
+
+export type SlotPredictions = {
+    startDate: Date,
+    endDate: Date,
+    confidence: number,
+    standardDeviation: number,
+    total: number
+} & TriageClassCounts;
