@@ -48,8 +48,10 @@ import {MatTreeModule} from '@angular/material/tree';
 import { GetPredictionComponent, PredictionResultsComponent, GetPredictionUserInputComponent } from '../../get-prediction';
 import { MatFormFieldModule } from '@angular/material/form-field';
 
+// register all the module to use throughout the code
 @NgModule({
   imports: [
+    // angular models to use throughout the application
     CommonModule,
     HttpClientModule,
     RouterModule.forChild(AdminLayoutRoutes),
@@ -57,6 +59,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     ReactiveFormsModule,
   ],
   exports: [
+    // export Material UI components. See https://material.angular.io/
     MatButtonModule,
     MatRippleModule,
     MatInputModule,
@@ -78,6 +81,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatDatepickerModule
   ],
   declarations: [
+    // Register local components
     GetPredictionComponent,
     UserProfileComponent,
     TableListComponent,
