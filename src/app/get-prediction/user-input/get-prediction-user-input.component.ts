@@ -8,6 +8,18 @@ import { PredictionRequestBody } from './requestTypes';
 // TODO - get input dynamically from API
 const triageClasses: string[] = ['Urgent', 'Semi-Urgent', 'Standard'];
 
+/**
+ * Get the user-input by building a form.
+ * On click of submit button, send a prediction POST request.
+ * Update any component listeners for the POST request result to
+ * update other components with new information
+ * 
+ * Form Inputs:
+ * - prediction date range
+ * - each interval time boundary
+ * - confidence level
+ * - each triage classes: window, min processing rate, time unit
+ */
 @Component({
   selector: 'app-prediction-user-input',
   templateUrl: './get-prediction-user-input.component.html',
@@ -108,6 +120,7 @@ export class GetPredictionUserInputComponent implements OnInit {
       }
   }
 
+  // on submit form, send request with all the form parameters
   getPrediction() {
     this.submitted = true;
     const endpoint = 'http://localhost:5000/predict?';
@@ -162,10 +175,12 @@ export class GetPredictionUserInputComponent implements OnInit {
     }
     const url = `${endpoint}?${queryParams}`;
     this.http.getPrediction(url, queryParams)
+      // listen to data response
       .subscribe((data: any) => {
         this.getPredictionService.setPredictionResults({ ...data });
       },
       (error: any) => {
+        // for testing purposes just return this dummy data for now until API is ready
         const predictionResults: PredictionResults & {_url: string}= {
           _url: 'test',
           intervaledSlotPredictions: [{
