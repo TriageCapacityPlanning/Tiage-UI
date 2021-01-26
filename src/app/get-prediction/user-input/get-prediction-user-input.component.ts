@@ -1,7 +1,7 @@
 import { Component, Input, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormControl, Validators, Form} from '@angular/forms';
 import { PredictionResults } from '../types';
-import { HttpService } from '../../http-get.service';
+import { HttpService } from '../../http.service';
 import { GetPredictionService } from '../get-prediction.service';
 import { PredictionRequestBody } from './requestTypes';
 
