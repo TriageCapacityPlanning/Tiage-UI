@@ -1,0 +1,44 @@
+<div class="main-content">
+  <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-12">
+              <div class="card">
+                  <div class="card-header text-white bg-dark">
+                      <h4 class="card-title text-white">Admin Settings</h4>
+                      <p class="card-category">Adjust query parameters</p>
+                  </div>
+                  <div class="card-body">
+                      <form>
+                        <h5>Uniform interval predictions</h5>
+                          <div class="row">
+                              <div class="col-md-5">
+                                <mat-form-field class="example-full-width">
+                                    <label>Number of simulation runs</label>
+                                    <input matInput value="500">
+                                  </mat-form-field>
+                              </div>
+                          </div>
+                          <h6>Upload Latest Data</h6>
+                          <div class="row">
+                              <div class="col-md-6">
+                                <label>Waitlist</label>
+                                <div>
+                                  <input type="file" class="upload" (change)="waitlistListener($event.target.files)">
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <label>Training Data</label>
+                                <div>
+                                  <input type="file" class="upload" (change)="trainingDataListener($event.target.files)">
+                                </div>
+                              </div>
+                          </div>
+                          <button mat-raised-button type="submit" class="btn btn-danger pull-right">Update Profile</button>
+                          <div class="clearfix"></div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

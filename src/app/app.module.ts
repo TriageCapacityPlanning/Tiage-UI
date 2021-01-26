@@ -10,18 +10,15 @@ import { ComponentsModule } from './components/components.module';
 
 import { AppComponent } from './app.component';
 
-import { UserProfileComponent } from './user-profile/user-profile.component';
-import { TableListComponent } from './table-list/table-list.component';
-import { TypographyComponent } from './typography/typography.component';
-import { IconsComponent } from './icons/icons.component';
-import { MapsComponent } from './maps/maps.component';
-import { NotificationsComponent } from './notifications/notifications.component';
-import { UpgradeComponent } from './upgrade/upgrade.component';
+import { UserProfileComponent } from './admin/admin.component';
 
 import {
   AgmCoreModule
 } from '@agm/core';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { HelpComponent } from './help/help.component';
+import { DocumentationComponent } from './documentation/documentation.component';
+import { DocpredictionComponent } from './documentation/docprediction/docprediction.component';
 
 @NgModule({
   imports: [
@@ -38,7 +35,10 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
   ],
   declarations: [
     AppComponent,
-    AdminLayoutComponent
+    AdminLayoutComponent,
+    HelpComponent,
+    DocumentationComponent,
+    DocpredictionComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

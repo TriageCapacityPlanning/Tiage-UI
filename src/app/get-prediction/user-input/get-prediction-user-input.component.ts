@@ -1,5 +1,5 @@
 import { Component, Input, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormControl, Validators, Form} from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormControl, Validators, Form } from '@angular/forms';
 import { PredictionResults } from '../types';
 import { HttpService } from '../../http.service';
 import { GetPredictionService } from '../get-prediction.service';
@@ -104,20 +104,17 @@ export class GetPredictionUserInputComponent implements OnInit {
 
   }
 
-  csvListener(files: FileList){
+  csvListener(files: FileList) {
     console.log(files);
-    if(files && files.length > 0) {
-       let file : File = files.item(0); 
-         console.log(file.name);
-         console.log(file.size);
-         console.log(file.type);
-         let reader: FileReader = new FileReader();
-         reader.readAsText(file);
-         reader.onload = (e) => {
-            this.csvFile = reader.result as string;
-            console.log(this.csvFile);
-         }
+    if (files && files.length > 0) {
+      let file: File = files.item(0);
+      let reader: FileReader = new FileReader();
+      reader.readAsText(file);
+      reader.onload = (e) => {
+        this.csvFile = reader.result as string;
+        console.log(this.csvFile);
       }
+    }
   }
 
   // on submit form, send request with all the form parameters
@@ -146,11 +143,11 @@ export class GetPredictionUserInputComponent implements OnInit {
           break;
         }
         case this.day: {
-          timeInWeeks = parseFloat(triageClassOptions.timeWindow)/7;
+          timeInWeeks = parseFloat(triageClassOptions.timeWindow) / 7;
           break;
         }
         default: {
-          timeInWeeks = parseFloat(triageClassOptions.timeWindow)/7;
+          timeInWeeks = parseFloat(triageClassOptions.timeWindow) / 7;
           // throw new Error('TODO')
         }
       }
@@ -173,51 +170,50 @@ export class GetPredictionUserInputComponent implements OnInit {
     if (this.csvFile) {
       queryParams.waitlistcsv = this.csvFile;
     }
-    const url = `${endpoint}?${queryParams}`;
-    this.http.getPrediction(url, queryParams)
+    this.http.getPrediction(endpoint, queryParams)
       // listen to data response
       .subscribe((data: any) => {
         this.getPredictionService.setPredictionResults({ ...data });
       },
-      (error: any) => {
-        // for testing purposes just return this dummy data for now until API is ready
-        const predictionResults: PredictionResults & {_url: string}= {
-          _url: 'test',
-          intervaledSlotPredictions: [{
-            startDate: new Date('January 2030'),
-            endDate: new Date('February 2030'),
-            confidence: 95.0,
-            standardDeviation: 2,
-            total: 25 + 30 + 30,
-            urgent: { slots: 25, stdDev: 2},
-            'semi-urgent': { slots: 30, stdDev: 2},
-            standard: { slots: 30, stdDev: 2},
-          }, {
-            startDate: new Date('January 2030'),
-            endDate: new Date('March 2030'),
-            confidence: 95.0,
-            standardDeviation: 2,
-            total: 14 + 10 + 20,
-            urgent: { slots: 14, stdDev: 1},
-            'semi-urgent': { slots: 10, stdDev: 0.5},
-            standard: { slots: 20, stdDev: 2},
-          }],
-          numberIntervals: 2,
-          slotPredictions: {
-            startDate: new Date('January 2030'),
-            endDate: new Date('March 2030'),
-            confidence: 95.0,
-            standardDeviation: 2,
-            total: (25 + 30 + 30)+(14 + 10 + 20),
-            urgent: { slots: 25 + 14, stdDev: 2},
-            'semi-urgent': { slots: 30 + 10, stdDev: 2},
-            standard: { slots: 30 + 20, stdDev: 2},
-          }
+        (error: any) => {
+          // for testing purposes just return this dummy data for now until API is ready
+          const predictionResults: PredictionResults & { _url: string } = {
+            _url: 'test',
+            intervaledSlotPredictions: [{
+              startDate: new Date('January 2030'),
+              endDate: new Date('February 2030'),
+              confidence: 95.0,
+              standardDeviation: 2,
+              total: 25 + 30 + 30,
+              urgent: { slots: 25, stdDev: 2 },
+              'semi-urgent': { slots: 30, stdDev: 2 },
+              standard: { slots: 30, stdDev: 2 },
+            }, {
+              startDate: new Date('January 2030'),
+              endDate: new Date('March 2030'),
+              confidence: 95.0,
+              standardDeviation: 2,
+              total: 14 + 10 + 20,
+              urgent: { slots: 14, stdDev: 1 },
+              'semi-urgent': { slots: 10, stdDev: 0.5 },
+              standard: { slots: 20, stdDev: 2 },
+            }],
+            numberIntervals: 2,
+            slotPredictions: {
+              startDate: new Date('January 2030'),
+              endDate: new Date('March 2030'),
+              confidence: 95.0,
+              standardDeviation: 2,
+              total: (25 + 30 + 30) + (14 + 10 + 20),
+              urgent: { slots: 25 + 14, stdDev: 2 },
+              'semi-urgent': { slots: 30 + 10, stdDev: 2 },
+              standard: { slots: 30 + 20, stdDev: 2 },
+            }
 
+          }
+          this.getPredictionService.setPredictionResults(predictionResults);
         }
-        this.getPredictionService.setPredictionResults(predictionResults);
-      }
-    )
+      )
   }
 
 }
