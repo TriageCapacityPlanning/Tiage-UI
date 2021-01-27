@@ -3,7 +3,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AdminLayoutRoutes } from './admin-layout.routing';
+import { LayoutRoutes } from './admin-layout.routing';
 import { UserProfileComponent } from '../../admin/admin.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatBadgeModule} from '@angular/material/badge';
@@ -48,7 +48,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     // angular models to use throughout the application
     CommonModule,
     HttpClientModule,
-    RouterModule.forChild(AdminLayoutRoutes),
+    RouterModule.forChild(LayoutRoutes),
     FormsModule,
     ReactiveFormsModule,
   ],
@@ -68,7 +68,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatTooltipModule,
     MatFormFieldModule,
     MatProgressBarModule,
-    MatTableModule
+    MatTableModule,
+    MatExpansionModule
   ],
   providers: [
     MatNativeDateModule,
