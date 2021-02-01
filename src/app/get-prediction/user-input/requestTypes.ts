@@ -5,6 +5,6 @@ export type PredictionRequestBody = {
     'num-sim-runs': string,
 } & TriageClassOptions
 
-export type TriageClassOptions = {
+export interface TriageClassOptions {
     [index: string]: string;
 }

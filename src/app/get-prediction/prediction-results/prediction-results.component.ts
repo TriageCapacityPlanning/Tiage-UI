@@ -13,7 +13,7 @@ const triageClasses: string[] = ['urgent', 'semi-urgent', 'standard'];
  * This component displays the prediction results of the API
  * This displays the expected slot of each triage class for each
  * prediction time interval.
- * 
+ *
  * Also displays the statistical significance and standard deviation
  */
 @Component({
@@ -30,10 +30,10 @@ export class PredictionResultsComponent implements OnInit {
   summaryIntervalPredictions: MatTableDataSource<SlotPredictions>;
   tcIntervalPredictions: MatTableDataSource<SlotPredictions>[];
   // API response data
-  @Input() predictionResults: PredictionResults; 
+  @Input() predictionResults: PredictionResults;
   subscription: Subscription;
   // display this component toggle variable
-  loaded: boolean = false;
+  loaded = false;
 
   constructor(private getPredictionServce: GetPredictionService) {
     this.subscription = this.getPredictionServce.predictionResults$.subscribe(
@@ -61,7 +61,7 @@ export class PredictionResultsComponent implements OnInit {
         tempPrediction.slots = (<TriageClassCount>prediction[triageClass]).slots;
         tempPrediction.stdDev = (<TriageClassCount>prediction[triageClass]).stdDev;
         return {
-          intervalNo: index+1,
+          intervalNo: index + 1,
           ...tempPrediction
         }
       });
@@ -72,7 +72,7 @@ export class PredictionResultsComponent implements OnInit {
 
   /**
    * Map API data to renderable format by putting it in table-friendly format
-   * @param intervaledSlotPredictions 
+   * @param intervaledSlotPredictions
    */
   translateSummaryIntervalsToTables(intervaledSlotPredictions: SlotPredictions[]) {
     const intervalData = intervaledSlotPredictions.map((prediction: SlotPredictions, index: number) => {
@@ -80,7 +80,7 @@ export class PredictionResultsComponent implements OnInit {
       tempPrediction.startDate = tempPrediction.startDate.toLocaleDateString('en-US');
       tempPrediction.endDate = tempPrediction.endDate.toLocaleDateString('en-US');
       return {
-        intervalNo: index+1,
+        intervalNo: index + 1,
         ...tempPrediction
       }
     });

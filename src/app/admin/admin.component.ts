@@ -9,7 +9,7 @@ import { HttpService } from '../http.service';
 export class UserProfileComponent implements OnInit {
   waitlist: string;
   trainingData: string;
-  formMessage: string = '';
+  formMessage = '';
   numSimRuns: number;
 
   constructor(private http: HttpService) { }
@@ -17,8 +17,8 @@ export class UserProfileComponent implements OnInit {
 
   waitlistListener(files: FileList) {
     if (files && files.length > 0) {
-      let file: File = files.item(0);
-      let reader: FileReader = new FileReader();
+      const file: File = files.item(0);
+      const reader: FileReader = new FileReader();
       reader.readAsText(file);
       reader.onload = (e) => {
         this.waitlist = reader.result as string;
@@ -28,8 +28,8 @@ export class UserProfileComponent implements OnInit {
 
   trainingDataListener(files: FileList) {
     if (files && files.length > 0) {
-      let file: File = files.item(0);
-      let reader: FileReader = new FileReader();
+      const file: File = files.item(0);
+      const reader: FileReader = new FileReader();
       reader.readAsText(file);
       reader.onload = (e) => {
         this.trainingData = reader.result as string;
@@ -48,8 +48,8 @@ export class UserProfileComponent implements OnInit {
       waitlist: this.waitlist,
       numSimRuns: this.numSimRuns
     }
-    let queryParams = {}
-    for (let key in formParams) {
+    const queryParams = {}
+    for (const key in formParams) {
       if (formParams[key] !== undefined) {
         queryParams[key] = formParams[key]
       }
