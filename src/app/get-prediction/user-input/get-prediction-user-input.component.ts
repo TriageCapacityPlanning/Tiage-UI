@@ -13,7 +13,7 @@ const triageClasses: string[] = ['Urgent', 'Semi-Urgent', 'Standard'];
  * On click of submit button, send a prediction POST request.
  * Update any component listeners for the POST request result to
  * update other components with new information
- * 
+ *
  * Form Inputs:
  * - prediction date range
  * - each interval time boundary
@@ -40,7 +40,7 @@ export class GetPredictionUserInputComponent implements OnInit {
   predictionForm: FormGroup;
   triageClassForms = new Object();
   oneDay = 24 * 60 * 60 * 1000;
-  submitted: boolean = false;
+  submitted = false;
   // calendar form
   floatLabelControl = new FormControl('auto');
   // File uploa
@@ -107,8 +107,8 @@ export class GetPredictionUserInputComponent implements OnInit {
   csvListener(files: FileList) {
     console.log(files);
     if (files && files.length > 0) {
-      let file: File = files.item(0);
-      let reader: FileReader = new FileReader();
+      const file: File = files.item(0);
+      const reader: FileReader = new FileReader();
       reader.readAsText(file);
       reader.onload = (e) => {
         this.csvFile = reader.result as string;
@@ -135,7 +135,7 @@ export class GetPredictionUserInputComponent implements OnInit {
     }, index: number) => {
       const paramType: string = this.triageClasses[index].toLowerCase();
       // set post request body key for min service percent
-      const minServicePercentParam: string = `${paramType}-service-percent=`;
+      const minServicePercentParam = `${paramType}-service-percent=`;
       let timeInWeeks: number | undefined;
       switch (triageClassOptions.timeUnit) {
         case this.week: {
@@ -152,7 +152,7 @@ export class GetPredictionUserInputComponent implements OnInit {
         }
       }
       // set post request body key for service window
-      const windowParam: string = `${paramType}-window=${timeInWeeks}`;
+      const windowParam = `${paramType}-window=${timeInWeeks}`;
       // set the query parameters key-value pair
       triageClassQueryParams[minServicePercentParam] = triageClassOptions.minServicePercent;
       triageClassQueryParams[windowParam] = timeInWeeks.toString();

@@ -1,13 +1,13 @@
-export type PredictionResults = {
+export interface PredictionResults {
     intervaledSlotPredictions: SlotPredictions[],
     numberIntervals: number,
     slotPredictions: SlotPredictions
 }
 
 
-export type TriageClassCount  = { slots: number, stdDev: number }
+export interface TriageClassCount  { slots: number, stdDev: number }
 
-export type TriageClassCountsWrapper = {
+export interface TriageClassCountsWrapper {
     [index: string]: TriageClassCount | number | Date;
 }
 
