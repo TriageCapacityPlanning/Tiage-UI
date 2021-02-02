@@ -1,9 +1,8 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { ROUTES as SIDEBARROUTES } from '../sidebar/sidebar.component';
-import { BaseRoutes as BASEROUTES } from '../../app.routing'
-import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
+import { ROUTES as SIDEBARROUTES, RouteInfo } from '../sidebar/sidebar.component';
+import { BaseRoutes as BASEROUTES, ComponentRouteInfo } from '../../app.routing'
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { fromPromise } from 'rxjs/internal-compatibility';
 
 @Component({
     selector: 'app-navbar',
@@ -11,24 +10,25 @@ import { fromPromise } from 'rxjs/internal-compatibility';
     styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-    private sidebarTitles: any[];
-    private layoutTitles: any[];
+    private sidebarTitles: RouteInfo[];
+    private layoutTitles: ComponentRouteInfo[];
     location: Location;
-    mobile_menu_visible: any = 0;
 
     constructor(location: Location, private element: ElementRef, private router: Router) {
         this.location = location;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.sidebarTitles = SIDEBARROUTES.filter(title => title); // filter out nulls
         this.layoutTitles = BASEROUTES.filter(title => title); // filter out nulls
-        const navbar: HTMLElement = this.element.nativeElement;
     }
 
 
-    getTitle() {
-        let title = this.location.prepareExternalUrl(this.location.path());
+    /**
+     * Get the title that should correspond to the url
+     */
+    getTitle(): string {
+        const title = this.location.prepareExternalUrl(this.location.path());
 
         for (let item = 0; item < this.sidebarTitles.length; item++) {
             if (this.sidebarTitles[item].path === title) {

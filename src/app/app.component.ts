@@ -1,7 +1,6 @@
 import { Component} from '@angular/core';
-import { Location, LocationStrategy, PathLocationStrategy, PopStateEvent } from '@angular/common';
+import { Location, PopStateEvent } from '@angular/common';
 import 'rxjs/add/operator/filter';
-import { NavbarComponent } from './components/navbar/navbar.component';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import PerfectScrollbar from 'perfect-scrollbar';
@@ -19,15 +18,14 @@ export class AppComponent {
 
   constructor( public location: Location, private router: Router) {}
 
-  ngOnInit() {
-      const isWindows = navigator.platform.indexOf('Win') > -1 ? true : false;
+  ngOnInit(): void {
       const elemMainPanel = <HTMLElement>document.querySelector('.main-panel');
       const elemSidebar = <HTMLElement>document.querySelector('.sidebar .sidebar-wrapper');
 
       this.location.subscribe((ev: PopStateEvent) => {
           this.lastPoppedUrl = ev.url;
       });
-       this.router.events.subscribe((event: any) => {
+       this.router.events.subscribe((event) => {
           if (event instanceof NavigationStart) {
              if (event.url !== this.lastPoppedUrl) {
                  this.yScrollStack.push(window.scrollY);
@@ -41,20 +39,16 @@ export class AppComponent {
              }
          }
       });
-      this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe((event: NavigationEnd) => {
+      this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe(() => {
            elemMainPanel.scrollTop = 0;
            elemSidebar.scrollTop = 0;
       });
-      if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {
-          let ps = new PerfectScrollbar(elemMainPanel);
-          ps = new PerfectScrollbar(elemSidebar);
-      }
 
   }
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
       this.runOnRouteChange();
   }
-  isMaps(path) {
+  isMaps(path: string): boolean {
       let titlee = this.location.prepareExternalUrl(this.location.path());
       titlee = titlee.slice( 1 );
       if (path === titlee) {

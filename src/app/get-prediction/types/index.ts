@@ -5,7 +5,7 @@ export interface PredictionResults {
 }
 
 
-export interface TriageClassCount  { slots: number, stdDev: number }
+export interface TriageClassCount  { slots: number, marginError: number }
 
 export interface TriageClassCountsWrapper {
     [index: string]: TriageClassCount | number | Date;

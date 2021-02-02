@@ -6,7 +6,7 @@ import { HttpService } from '../http.service';
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-export class Admin implements OnInit {
+export class AdminComponent implements OnInit {
   waitlist: string;
   trainingData: string;
   formMessage = '';
@@ -18,12 +18,12 @@ export class Admin implements OnInit {
    * Set class member to the value of the file string
    * @param files some files uploaded in the UI
    */
-  waitlistListener(files: FileList) {
+  waitlistListener(files: FileList): void {
     if (files && files.length > 0) {
       const file: File = files.item(0);
       const reader: FileReader = new FileReader();
       reader.readAsText(file);
-      reader.onload = (e) => {
+      reader.onload = () => {
         this.waitlist = reader.result as string;
       }
     }
@@ -33,24 +33,25 @@ export class Admin implements OnInit {
    * Set class member to the value of the file string
    * @param files some files uploaded in the UI
    */
-  trainingDataListener(files: FileList) {
+  trainingDataListener(files: FileList): void {
     if (files && files.length > 0) {
       const file: File = files.item(0);
       const reader: FileReader = new FileReader();
       reader.readAsText(file);
-      reader.onload = (e) => {
+      reader.onload = () => {
         this.trainingData = reader.result as string;
       }
     }
   }
 
-  ngOnInit() {
+  /* eslint-disable  @typescript-eslint/no-empty-function */
+  ngOnInit(): void {
   }
 
   /**
    * Send a request to update the admin settings
    */
-  requestUpdateProfile() {
+  requestUpdateProfile(): void {
     const endpoint = '' // TODO
 
     const formParams = {
@@ -67,11 +68,12 @@ export class Admin implements OnInit {
     // send form data
     this.http.post(endpoint, queryParams)
       // listen to data response
-      .subscribe((data: any) => {
+      .subscribe(() => {
         this.formMessage = 'success'
       },
-        (error: any) => {
+        (error) => {
           console.log(queryParams)
+          console.log(error)
         }
       )
   }

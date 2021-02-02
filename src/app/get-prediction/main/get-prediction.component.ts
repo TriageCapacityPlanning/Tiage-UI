@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { PredictionResults } from '../types';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-get-prediction',
@@ -8,9 +7,6 @@ import { PredictionResults } from '../types';
 })
 export class GetPredictionComponent implements OnInit {
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  /* eslint-disable  @typescript-eslint/no-empty-function */
+  ngOnInit(): void {}
 }

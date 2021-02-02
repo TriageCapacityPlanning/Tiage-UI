@@ -6,10 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./help.component.css']
 })
 export class HelpComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  
+  /* eslint-disable  @typescript-eslint/no-empty-function */
+  ngOnInit(): void {}
 
 }

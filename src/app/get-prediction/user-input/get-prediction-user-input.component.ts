@@ -1,5 +1,5 @@
-import { Component, Input, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormControl, Validators, Form } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { PredictionResults } from '../types';
 import { HttpService } from '../../http.service';
 import { GetPredictionService } from '../get-prediction.service';
@@ -63,7 +63,7 @@ export class GetPredictionUserInputComponent implements OnInit {
       }),
       confidence: this.fb.control(null, [Validators.required, Validators.min(0), Validators.max(100)]),
       triageClassesOptions: this.fb.array(
-        this.triageClasses.map((triageClass: string) => this.fb.group({
+        this.triageClasses.map(() => this.fb.group({
           minServicePercent: this.fb.control('', [Validators.required]),
           timeWindow: this.fb.control('', [Validators.required]),
           timeUnit: this.fb.control('', [Validators.required]),
@@ -75,19 +75,24 @@ export class GetPredictionUserInputComponent implements OnInit {
     console.log(this.predictionForm)
   }
 
-  // Form controls
-  get rootFormControls() {
+  /**
+   * Form controls getter for the root for
+   */
+  get rootFormControls(): { [key: string]: AbstractControl } {
     return this.predictionForm.controls;
   }
 
-  get intervalFormControls() {
+  /**
+   * Get the interval date range form values
+   */
+  get intervalFormControls(): FormArray {
     return <FormArray>this.rootFormControls.intervalDateRanges;
   }
 
   /**
    * Update the form to have another interval
    */
-  addIntervalDateRange() {
+  addIntervalDateRange(): void {
     const formControl = this.intervalFormControls;
     formControl.push(this.fb.group({
       start: this.fb.control,
@@ -99,7 +104,7 @@ export class GetPredictionUserInputComponent implements OnInit {
    * Remove an interval input row
    * @param i the ith interval
    */
-  removeIntervalDateRange(i: number) {
+  removeIntervalDateRange(i: number): void {
     const formControl = this.intervalFormControls;
     formControl.removeAt(i);
   }
@@ -107,7 +112,7 @@ export class GetPredictionUserInputComponent implements OnInit {
   /**
    * Delete all intervals but start with a default empty interval
    */
-  resetIntervalDateRange() {
+  resetIntervalDateRange(): void {
     const formControl = this.intervalFormControls;
     formControl.clear();
     this.addIntervalDateRange();
@@ -117,20 +122,22 @@ export class GetPredictionUserInputComponent implements OnInit {
    * When a csv is uploaded and this function is called, store it in a variable
    * @param files some files uploaded in the UI
    */
-  csvListener(files: FileList) {
+  csvListener(files: FileList): void {
     console.log(files);
     if (files && files.length > 0) {
       const file: File = files.item(0);
       const reader: FileReader = new FileReader();
       reader.readAsText(file);
-      reader.onload = (e) => {
+      reader.onload = () => {
         this.csvFile = reader.result as string;
       }
     }
   }
 
-  // on submit form, send request with all the form parameters
-  getPrediction() {
+  /**
+   * on submit form, send request with all the form parameters
+   */
+  getPrediction(): void {
     this.submitted = true;
     const endpoint = 'http://localhost:5000/predict?';
     console.log(this.predictionForm)
@@ -140,7 +147,7 @@ export class GetPredictionUserInputComponent implements OnInit {
     // set the triage class query parameters
     const triageClassQueryParams = {};
     // assume in the same order as the triage class user list
-    (<Object[]>formValues.triageClassesOptions).forEach((triageClassOptions: {
+    (<Record<string, unknown>[]>formValues.triageClassesOptions).forEach((triageClassOptions: {
       timeUnit: string,
       timeWindow: string,
       minServicePercent: string
@@ -185,11 +192,12 @@ export class GetPredictionUserInputComponent implements OnInit {
     // get the API's response
     this.http.post(endpoint, queryParams)
       // listen to data response
-      .subscribe((data: any) => {
+      .subscribe((data: PredictionResults) => {
         this.getPredictionService.setPredictionResults({ ...data });
       },
-        (error: any) => {
+        (error) => {
           // for testing purposes just return this dummy data for now until API is ready
+          console.log(error)
           const predictionResults: PredictionResults & { _url: string } = {
             _url: 'test',
             intervaledSlotPredictions: [{
@@ -198,18 +206,18 @@ export class GetPredictionUserInputComponent implements OnInit {
               confidence: 95.0,
               standardDeviation: 2,
               total: 25 + 30 + 30,
-              urgent: { slots: 25, stdDev: 2 },
-              'semi-urgent': { slots: 30, stdDev: 2 },
-              standard: { slots: 30, stdDev: 2 },
+              urgent: { slots: 25, marginError: 2 },
+              'semi-urgent': { slots: 30, marginError: 2 },
+              standard: { slots: 30, marginError: 2 },
             }, {
               startDate: new Date('January 2030'),
               endDate: new Date('March 2030'),
               confidence: 95.0,
               standardDeviation: 2,
               total: 14 + 10 + 20,
-              urgent: { slots: 14, stdDev: 1 },
-              'semi-urgent': { slots: 10, stdDev: 0.5 },
-              standard: { slots: 20, stdDev: 2 },
+              urgent: { slots: 14, marginError: 1 },
+              'semi-urgent': { slots: 10, marginError: 0.5 },
+              standard: { slots: 20, marginError: 2 },
             }],
             numberIntervals: 2,
             slotPredictions: {
@@ -218,9 +226,9 @@ export class GetPredictionUserInputComponent implements OnInit {
               confidence: 95.0,
               standardDeviation: 2,
               total: (25 + 30 + 30) + (14 + 10 + 20),
-              urgent: { slots: 25 + 14, stdDev: 2 },
-              'semi-urgent': { slots: 30 + 10, stdDev: 2 },
-              standard: { slots: 30 + 20, stdDev: 2 },
+              urgent: { slots: 25 + 14, marginError: 2 },
+              'semi-urgent': { slots: 30 + 10, marginError: 2 },
+              standard: { slots: 30 + 20, marginError: 2 },
             }
 
           }

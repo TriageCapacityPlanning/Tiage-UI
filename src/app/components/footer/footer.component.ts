@@ -8,9 +8,8 @@ import { Component, OnInit } from '@angular/core';
 export class FooterComponent implements OnInit {
   test: Date = new Date();
 
-  constructor() { }
-
-  ngOnInit() {
+  /* eslint-disable  @typescript-eslint/no-empty-function */
+  ngOnInit(): void {
   }
 
 }

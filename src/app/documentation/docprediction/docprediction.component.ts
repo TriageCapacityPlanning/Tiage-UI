@@ -7,8 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DocpredictionComponent implements OnInit {
 
-  constructor() { }
-
+  /* eslint-disable  @typescript-eslint/no-empty-function */
   ngOnInit(): void {
   }
 

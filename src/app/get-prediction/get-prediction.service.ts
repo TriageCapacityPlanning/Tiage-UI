@@ -13,9 +13,7 @@ export class GetPredictionService {
   @Input() predictionResults = new Subject<PredictionResults>();
   predictionResults$ = this.predictionResults.asObservable();
 
-  constructor() { }
-
-  getPredictionResults() {
+  getPredictionResults(): Subject<PredictionResults> {
     return this.predictionResults;
   }
 
@@ -23,7 +21,7 @@ export class GetPredictionService {
    * Inter-component communication between user-input and prediction-results
    * @param predictionResults
    */
-  setPredictionResults(predictionResults: PredictionResults) {
+  setPredictionResults(predictionResults: PredictionResults): void {
     this.predictionResults.next(predictionResults);
     console.log(predictionResults)
   }

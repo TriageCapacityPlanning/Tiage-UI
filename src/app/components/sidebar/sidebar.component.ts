@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+
 declare const $: any;
-declare interface RouteInfo {
+export declare interface RouteInfo {
     path: string;
     title: string;
     icon: string;
@@ -19,15 +21,13 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
   menuItems: any[];
 
-  constructor() { }
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
   }
-  isMobileMenu() {
+  isMobileMenu(): boolean {
       if ($(window).width() > 991) {
           return false;
       }
       return true;
-  };
+  }
 }
