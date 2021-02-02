@@ -84,6 +84,9 @@ export class GetPredictionUserInputComponent implements OnInit {
     return <FormArray>this.rootFormControls.intervalDateRanges;
   }
 
+  /**
+   * Update the form to have another interval
+   */
   addIntervalDateRange() {
     const formControl = this.intervalFormControls;
     formControl.push(this.fb.group({
@@ -92,18 +95,29 @@ export class GetPredictionUserInputComponent implements OnInit {
     }))
   }
 
+  /**
+   * 
+   * @param i Remove an interval input row
+   */
   removeIntervalDateRange(i: number) {
     const formControl = this.intervalFormControls;
     formControl.removeAt(i);
   }
 
-  resetIntervalDateRange(i: number) {
+  /**
+   * Delete all intervals but start with a default empty interval
+   */
+  resetIntervalDateRange() {
     const formControl = this.intervalFormControls;
     formControl.clear();
     this.addIntervalDateRange();
 
   }
 
+  /**
+   * When a csv is uploaded and this function is called, store it in a variable
+   * @param files 
+   */
   csvListener(files: FileList) {
     console.log(files);
     if (files && files.length > 0) {
@@ -158,7 +172,7 @@ export class GetPredictionUserInputComponent implements OnInit {
       triageClassQueryParams[windowParam] = timeInWeeks.toString();
     })
 
-
+    // generate the post body
     const queryParams: PredictionRequestBody = {
       'start-date': formValues.predictionDateRange.start,
       'end-date': formValues.predictionDateRange.end,
@@ -170,7 +184,8 @@ export class GetPredictionUserInputComponent implements OnInit {
     if (this.csvFile) {
       queryParams.waitlistcsv = this.csvFile;
     }
-    this.http.getPrediction(endpoint, queryParams)
+    // get the API's response
+    this.http.post(endpoint, queryParams)
       // listen to data response
       .subscribe((data: any) => {
         this.getPredictionService.setPredictionResults({ ...data });

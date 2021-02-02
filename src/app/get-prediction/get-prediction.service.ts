@@ -2,6 +2,9 @@ import { Injectable, Input } from '@angular/core';
 import { PredictionResults } from './types';
 import { Subject } from 'rxjs';
 
+/**
+ * An inter-component helper class to share data
+ */
 @Injectable({
   providedIn: 'root'
 })

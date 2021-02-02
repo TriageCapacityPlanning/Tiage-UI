@@ -36,6 +36,7 @@ export class PredictionResultsComponent implements OnInit {
   loaded = false;
 
   constructor(private getPredictionServce: GetPredictionService) {
+    // listen to updates for this variable and then display it
     this.subscription = this.getPredictionServce.predictionResults$.subscribe(
       predictionResults => {
         this.loaded = true;
@@ -50,6 +51,11 @@ export class PredictionResultsComponent implements OnInit {
     )
   }
 
+  /**
+   * Take the intervals returned from the API
+   * and format them into a table format for the UI to display
+   * @param intervaledSlotPredictions 
+   */
   translateTCIntervalToTable(intervaledSlotPredictions: SlotPredictions[]) {
     const tcIntervalData = this.triageClasses.map((triageClass: string, tcIndex: number) => {
       const intervalData = intervaledSlotPredictions.map((prediction: SlotPredictions, index: number) => {

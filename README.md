@@ -1,7 +1,7 @@
 # Triage-UI
 UI for Triage Class prediction
 
-## Development server
+## Running locally
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
@@ -15,7 +15,7 @@ Run `ng build` to build the project. The build artifacts will be stored in the `
 
 ## Running unit tests
 
-We are omitting unit tests given the team size and the deadline. Manual UI testing should be sufficient until there is a need for the UI complexity to grow, or there is a big enough team
+Run `npm test`
 
 ## Further help
 
