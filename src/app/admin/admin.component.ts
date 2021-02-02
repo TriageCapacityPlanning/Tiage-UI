@@ -15,6 +15,10 @@ export class UserProfileComponent implements OnInit {
   constructor(private http: HttpService) { }
 
 
+  /**
+   * Set class member to the value of the file string
+   * @param files 
+   */
   waitlistListener(files: FileList) {
     if (files && files.length > 0) {
       const file: File = files.item(0);
@@ -26,6 +30,10 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
+  /**
+   * Set class member to the value of the file string
+   * @param files 
+   */
   trainingDataListener(files: FileList) {
     if (files && files.length > 0) {
       const file: File = files.item(0);
@@ -40,6 +48,9 @@ export class UserProfileComponent implements OnInit {
   ngOnInit() {
   }
 
+  /**
+   * Send a request to update the admin settings
+   */
   requestUpdateProfile() {
     const endpoint = '' // TODO
 
@@ -54,7 +65,8 @@ export class UserProfileComponent implements OnInit {
         queryParams[key] = formParams[key]
       }
     }
-    this.http.getPrediction(endpoint, queryParams)
+    // send form data
+    this.http.post(endpoint, queryParams)
       // listen to data response
       .subscribe((data: any) => {
         this.formMessage = 'success'

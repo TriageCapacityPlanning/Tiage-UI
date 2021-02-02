@@ -7,7 +7,12 @@ import { HttpClient } from '@angular/common/http';
 export class HttpService {
   constructor(private http: HttpClient) { }
 
-  public getPrediction(url: string, body: Object) {
+  /**
+   * Send an http post request
+   * @param url The URL of the http post
+   * @param body the content of the POST request
+   */
+  public post(url: string, body: Object) {
     return this.http.post(url, body);
   }
 }
