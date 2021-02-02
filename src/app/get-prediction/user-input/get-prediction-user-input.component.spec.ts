@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GetPredictionUserInputComponent } from './get-prediction-user-input.component';
 
-describe('UserProfileComponent', () => {
+describe('GetPredictionUserInputComponent', () => {
   let component: GetPredictionUserInputComponent;
   let fixture: ComponentFixture<GetPredictionUserInputComponent>;
 

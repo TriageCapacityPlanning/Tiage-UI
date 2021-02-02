@@ -1,6 +1,6 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES as SIDEBARROUTES } from '../sidebar/sidebar.component';
-import { LayoutRoutes as LAYOUTROUTES } from '../../layouts/admin-layout/admin-layout.routing'
+import { BaseRoutes as BASEROUTES } from '../../app.routing'
 import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
 import { Router } from '@angular/router';
 import { fromPromise } from 'rxjs/internal-compatibility';
@@ -22,16 +22,13 @@ export class NavbarComponent implements OnInit {
 
     ngOnInit() {
         this.sidebarTitles = SIDEBARROUTES.filter(title => title); // filter out nulls
-        this.layoutTitles = LAYOUTROUTES.filter(title => title); // filter out nulls
+        this.layoutTitles = BASEROUTES.filter(title => title); // filter out nulls
         const navbar: HTMLElement = this.element.nativeElement;
     }
 
 
     getTitle() {
         let title = this.location.prepareExternalUrl(this.location.path());
-        if (title.charAt(0) === '#') {
-            title = title.slice(1);
-        }
 
         for (let item = 0; item < this.sidebarTitles.length; item++) {
             if (this.sidebarTitles[item].path === title) {
@@ -39,9 +36,9 @@ export class NavbarComponent implements OnInit {
             }
         }
 
-        for (let item = 0; item < LAYOUTROUTES.length; item++) {
-            if (LAYOUTROUTES[item].path === title.substr(1)) {
-                return LAYOUTROUTES[item].title;
+        for (let item = 0; item < BASEROUTES.length; item++) {
+            if (BASEROUTES[item].path === title.substr(1)) {
+                return BASEROUTES[item].title;
             }
         }
         return '';

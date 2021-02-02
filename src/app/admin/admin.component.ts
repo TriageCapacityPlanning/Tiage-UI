@@ -6,7 +6,7 @@ import { HttpService } from '../http.service';
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-export class UserProfileComponent implements OnInit {
+export class Admin implements OnInit {
   waitlist: string;
   trainingData: string;
   formMessage = '';
@@ -14,10 +14,9 @@ export class UserProfileComponent implements OnInit {
 
   constructor(private http: HttpService) { }
 
-
   /**
    * Set class member to the value of the file string
-   * @param files 
+   * @param files some files uploaded in the UI
    */
   waitlistListener(files: FileList) {
     if (files && files.length > 0) {
@@ -32,7 +31,7 @@ export class UserProfileComponent implements OnInit {
 
   /**
    * Set class member to the value of the file string
-   * @param files 
+   * @param files some files uploaded in the UI
    */
   trainingDataListener(files: FileList) {
     if (files && files.length > 0) {
@@ -76,5 +75,4 @@ export class UserProfileComponent implements OnInit {
         }
       )
   }
-
 }

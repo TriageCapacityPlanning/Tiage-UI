@@ -96,8 +96,8 @@ export class GetPredictionUserInputComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param i Remove an interval input row
+   * Remove an interval input row
+   * @param i the ith interval
    */
   removeIntervalDateRange(i: number) {
     const formControl = this.intervalFormControls;
@@ -111,12 +111,11 @@ export class GetPredictionUserInputComponent implements OnInit {
     const formControl = this.intervalFormControls;
     formControl.clear();
     this.addIntervalDateRange();
-
   }
 
   /**
    * When a csv is uploaded and this function is called, store it in a variable
-   * @param files 
+   * @param files some files uploaded in the UI
    */
   csvListener(files: FileList) {
     console.log(files);
@@ -126,7 +125,6 @@ export class GetPredictionUserInputComponent implements OnInit {
       reader.readAsText(file);
       reader.onload = (e) => {
         this.csvFile = reader.result as string;
-        console.log(this.csvFile);
       }
     }
   }

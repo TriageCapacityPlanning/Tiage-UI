@@ -2,21 +2,32 @@ import { NgModule } from '@angular/core';
 import { CommonModule, } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
+import { HelpComponent } from './help/help.component';
+import { DocumentationComponent } from './documentation/documentation.component';
+import { Admin } from './admin/admin.component';
+import { GetPredictionComponent } from './get-prediction';
 
-import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { AppComponent } from './app.component';
 
-const routes: Routes = [
-  {
+import { Route } from '@angular/router';
+
+declare interface RouteInfo extends Route {
+    title?: string;
+    component: any;
+}
+
+// the url base paths
+export const BaseRoutes: RouteInfo[] = [
+    { path: 'interval-prediction', component: GetPredictionComponent },
+    { path: 'admin',   component: Admin, title: 'Admin Settings' },
+    { path: 'help',  component: HelpComponent, title: 'Help' },
+    { path: 'docs',  component: DocumentationComponent, title: 'Documentation' }
+];
+
+// Router service configuration
+const routes: Routes = [{
     path: '',
-    redirectTo: 'interval-prediction',
-    pathMatch: 'full',
-  }, {
-    path: '',
-    component: AdminLayoutComponent,
-    children: [{
-      path: '',
-      loadChildren: './layouts/admin-layout/admin-layout.module#AdminLayoutModule'
-    }]
+    component: AppComponent,
   }
 ];
 
@@ -25,7 +36,6 @@ const routes: Routes = [
     CommonModule,
     BrowserModule,
     RouterModule.forRoot(routes, {
-      useHash: true
     })
   ],
   exports: [

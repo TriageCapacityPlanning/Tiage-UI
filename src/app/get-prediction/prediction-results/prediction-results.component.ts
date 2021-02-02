@@ -54,10 +54,10 @@ export class PredictionResultsComponent implements OnInit {
   /**
    * Take the intervals returned from the API
    * and format them into a table format for the UI to display
-   * @param intervaledSlotPredictions 
+   * @param intervaledSlotPredictions response from the api
    */
   translateTCIntervalToTable(intervaledSlotPredictions: SlotPredictions[]) {
-    const tcIntervalData = this.triageClasses.map((triageClass: string, tcIndex: number) => {
+    const tcIntervalData = this.triageClasses.map((_: string, tcIndex: number) => {
       const intervalData = intervaledSlotPredictions.map((prediction: SlotPredictions, index: number) => {
         const tempPrediction: any = {};
         tempPrediction.startDate = prediction.startDate.toLocaleDateString('en-US');
