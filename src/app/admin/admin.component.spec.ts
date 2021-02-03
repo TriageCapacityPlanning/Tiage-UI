@@ -1,22 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AdminComponent } from './admin.component';
 
 describe('AdminComponent', () => {
+  let httpServiceSpy: {post: jasmine.Spy};
   let component: AdminComponent;
-  let fixture: ComponentFixture<AdminComponent>;
-
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ AdminComponent ]
-    })
-    .compileComponents();
-  }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AdminComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    httpServiceSpy = jasmine.createSpyObj('HttpService', ['post']);
+    component = new AdminComponent(httpServiceSpy as any);
   });
 
   it('should create', () => {
