@@ -54,4 +54,22 @@ describe('GetPredictionUserInputComponent', () => {
     getPredictionService.setPredictionResults(dummyPredictionResults);
     expect(component.loaded).toBe(true);
   });
+
+  it('should correctly set prediction results', () => {
+    expect(component.predictionResults).toBe(null);
+    getPredictionService.setPredictionResults(dummyPredictionResults);
+    expect(component.predictionResults).toBe(dummyPredictionResults);
+  });
+
+  //todo update this test once API integration exists
+  it('should properly load triage classes', () => {
+    expect(component.triageClasses).toBe(['urgent', 'semi-urgent', 'standard']);
+  })
+
+  it('should display correctly', () =>{
+    expect(component.displayedIntervalColumns).toBe(['intervalNo',
+    'startDate',
+    'endDate',
+    ...component.triageClasses]);
+  })
 });
