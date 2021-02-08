@@ -9,3 +9,7 @@ Run `npm test`
 
 ## Code coverage documentation
 Run `ng test --no-watch --code-coverage`
+
+## Sample Run
+
+see [coverage/index.html](https://github.com/TriageCapacityPlanning/Triage-UI/blob/dev-testing/coverage/index.html)
