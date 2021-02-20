@@ -198,39 +198,46 @@ export class GetPredictionUserInputComponent implements OnInit {
         (error) => {
           // for testing purposes just return this dummy data for now until API is ready
           console.log(error)
-          const predictionResults: PredictionResults & { _url: string } = {
+          const predictionResults: PredictionResults = {
             _url: 'test',
-            intervaledSlotPredictions: [{
-              startDate: new Date('January 2030'),
-              endDate: new Date('February 2030'),
-              confidence: 95.0,
-              standardDeviation: 2,
-              total: 25 + 30 + 30,
-              urgent: { slots: 25, marginError: 2 },
-              'semi-urgent': { slots: 30, marginError: 2 },
-              standard: { slots: 30, marginError: 2 },
-            }, {
-              startDate: new Date('January 2030'),
-              endDate: new Date('March 2030'),
-              confidence: 95.0,
-              standardDeviation: 2,
-              total: 14 + 10 + 20,
-              urgent: { slots: 14, marginError: 1 },
-              'semi-urgent': { slots: 10, marginError: 0.5 },
-              standard: { slots: 20, marginError: 2 },
-            }],
-            numberIntervals: 2,
-            slotPredictions: {
-              startDate: new Date('January 2030'),
-              endDate: new Date('March 2030'),
-              confidence: 95.0,
-              standardDeviation: 2,
-              total: (25 + 30 + 30) + (14 + 10 + 20),
-              urgent: { slots: 25 + 14, marginError: 2 },
-              'semi-urgent': { slots: 30 + 10, marginError: 2 },
-              standard: { slots: 30 + 20, marginError: 2 },
+            predictions: {
+              urgent: [
+                {
+                  slots: 25,
+                  start_date: 'January 2030',
+                  end_date: 'February 2030'
+                },
+                {
+                  slots: 14,
+                  start_date: 'January 2030',
+                  end_date: 'February 2030'
+                }
+              ],
+              'semi-urgent': [
+                {
+                  slots: 30,
+                  start_date: 'January 2030',
+                  end_date: 'February 2030'
+                },
+                {
+                  slots: 10,
+                  start_date: 'January 2030',
+                  end_date: 'February 2030'
+                }
+              ],
+              standard: [
+                {
+                  slots: 30,
+                  start_date: 'January 2030',
+                  end_date: 'February 2030'
+                },
+                {
+                  slots: 10,
+                  start_date: 'January 2030',
+                  end_date: 'February 2030'
+                }
+              ]
             }
-
           }
           this.getPredictionService.setPredictionResults(predictionResults);
         }

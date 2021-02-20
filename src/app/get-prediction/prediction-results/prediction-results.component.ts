@@ -1,14 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {PredictionResults, SlotPredictions, TriageClassCount} from '../types';
+import {IntervalPrediction, PredictionResults, TriageClassPredictions} from '../types';
 import {GetPredictionService} from '../get-prediction.service';
 import {Subscription} from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 
-interface PrettySlotPredictions {
+interface IntervalSlotPredictions {
   startDate: string;
   endDate: string;
-  confidence: number;
-  total: number;
+  slots: number;
 }
 
 // TODO - get input dynamically from API
@@ -31,9 +30,8 @@ export class PredictionResultsComponent implements OnInit {
   triageClasses: string[];
   // table settings
   displayedIntervalColumns: string[];
-  displayedtcIntervalColumns: string[] = ['intervalNo', 'startDate', 'endDate', 'slots', 'marginError'];
-  summaryIntervalPredictions: MatTableDataSource<PrettySlotPredictions>;
-  tcIntervalPredictions: MatTableDataSource<SlotPredictions>[];
+  displayedtcIntervalColumns: string[] = ['intervalNo', 'startDate', 'endDate', 'slots'];
+  tcIntervalPredictions: MatTableDataSource<IntervalSlotPredictions>[];
   // API response data
   @Input() predictionResults: PredictionResults;
   subscription: Subscription;
@@ -46,9 +44,7 @@ export class PredictionResultsComponent implements OnInit {
       predictionResults => {
         this.loaded = true;
         this.predictionResults = predictionResults;
-        this.summaryIntervalPredictions = this.translateSummaryIntervalsToTables(predictionResults.intervaledSlotPredictions);
-        console.log(this.summaryIntervalPredictions);
-        this.tcIntervalPredictions = this.translateTCIntervalToTable(predictionResults.intervaledSlotPredictions);
+        this.tcIntervalPredictions = this.translateTCIntervalToTable(predictionResults.predictions);
         console.log(this.tcIntervalPredictions);
       }
     )
@@ -59,44 +55,22 @@ export class PredictionResultsComponent implements OnInit {
    * and format them into a table format for the UI to display
    * @param intervaledSlotPredictions response from the api
    */
-  translateTCIntervalToTable(intervaledSlotPredictions: SlotPredictions[]): MatTableDataSource<SlotPredictions>[] {
-    const tcIntervalData = this.triageClasses.map((_: string, tcIndex: number) => {
-      const intervalData = intervaledSlotPredictions.map((prediction: SlotPredictions, index: number) => {
-        const tempPrediction: any = {};
-        tempPrediction.startDate = prediction.startDate.toLocaleDateString('en-US');
-        tempPrediction.endDate = prediction.endDate.toLocaleDateString('en-US');
-        const triageClass = this.triageClasses[tcIndex];
-        console.log(triageClass, (<TriageClassCount>prediction[triageClass]).slots)
-        tempPrediction.slots = (<TriageClassCount>prediction[triageClass]).slots;
-        tempPrediction.marginError = (<TriageClassCount>prediction[triageClass]).marginError;
+  translateTCIntervalToTable(intervaledSlotPredictions: TriageClassPredictions): MatTableDataSource<IntervalSlotPredictions>[] {
+    const tcIntervalData = this.triageClasses.map((tc: string) => {
+      const intervalData = intervaledSlotPredictions[tc].map((prediction: IntervalPrediction, index: number) => {
+        const intervalSlotPrediction: IntervalSlotPredictions = {
+          startDate: prediction.start_date,
+          endDate: prediction.end_date,
+          slots: prediction.slots
+        };
         return {
           intervalNo: index + 1,
-          ...tempPrediction
+          ...intervalSlotPrediction
         }
       });
       return new MatTableDataSource(intervalData);
     })
     return tcIntervalData;
-  }
-
-  /**
-   * Map API data to renderable format by putting it in table-friendly format
-   * @param intervaledSlotPredictions
-   */
-  translateSummaryIntervalsToTables(intervaledSlotPredictions: SlotPredictions[]): MatTableDataSource<PrettySlotPredictions> {
-    const intervalData = intervaledSlotPredictions.map((prediction: SlotPredictions, index: number) => {
-      const tempPrediction: PrettySlotPredictions = {
-        startDate: prediction.startDate.toLocaleDateString('en-US'),
-        endDate: prediction.endDate.toLocaleDateString('en-US'),
-        confidence: prediction.confidence,
-        total: prediction.total
-      };
-      return {
-        intervalNo: index + 1,
-        ...tempPrediction
-      }
-    });
-    return new MatTableDataSource(intervalData);
   }
 
   ngOnInit(): void {
