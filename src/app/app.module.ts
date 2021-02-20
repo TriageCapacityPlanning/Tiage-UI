@@ -10,20 +10,22 @@ import {
 import { CommonModule } from '@angular/common';
 
 // load material UI components
-import {MatButtonModule} from '@angular/material/button';
-import {MatButtonToggleModule} from '@angular/material/button-toggle';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {MatIconModule} from '@angular/material/icon';
-import {MatInputModule} from '@angular/material/input';
-import {MatListModule} from '@angular/material/list';
-import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatSelectModule} from '@angular/material/select';
-import {MatTableModule} from '@angular/material/table';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material/tabs';
 
 // load app data
 import { AppRoutingModule, BaseRoutes } from './app.routing';
@@ -83,7 +85,9 @@ import { GetPredictionComponent, PredictionResultsComponent, GetPredictionUserIn
     MatFormFieldModule,
     MatProgressBarModule,
     MatTableModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatGridListModule,
+    MatTabsModule
   ],
   providers: [
     MatNativeDateModule,

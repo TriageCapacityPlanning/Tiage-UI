@@ -204,37 +204,37 @@ export class GetPredictionUserInputComponent implements OnInit {
               urgent: [
                 {
                   slots: 25,
-                  start_date: 'January 2030',
-                  end_date: 'February 2030'
+                  start_date: '2030-01-01',
+                  end_date: '2030-02-01'
                 },
                 {
                   slots: 14,
-                  start_date: 'January 2030',
-                  end_date: 'February 2030'
+                  start_date: '2030-02-02',
+                  end_date: '2030-03-01'
                 }
               ],
               'semi-urgent': [
                 {
                   slots: 30,
-                  start_date: 'January 2030',
-                  end_date: 'February 2030'
+                  start_date: '2030-01-01',
+                  end_date: '2030-02-01'
                 },
                 {
                   slots: 10,
-                  start_date: 'January 2030',
-                  end_date: 'February 2030'
+                  start_date: '2030-02-02',
+                  end_date: '2030-03-01'
                 }
               ],
               standard: [
                 {
                   slots: 30,
-                  start_date: 'January 2030',
-                  end_date: 'February 2030'
+                  start_date: '2030-01-01',
+                  end_date: '2030-02-01'
                 },
                 {
                   slots: 10,
-                  start_date: 'January 2030',
-                  end_date: 'February 2030'
+                  start_date: '2030-02-02',
+                  end_date: '2030-03-01'
                 }
               ]
             }

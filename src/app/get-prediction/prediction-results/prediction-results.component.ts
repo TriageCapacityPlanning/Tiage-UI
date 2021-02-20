@@ -44,8 +44,6 @@ export class PredictionResultsComponent implements OnInit {
       predictionResults => {
         this.loaded = true;
         this.predictionResults = predictionResults;
-        this.tcIntervalPredictions = this.translateTCIntervalToTable(predictionResults.predictions);
-        console.log(this.tcIntervalPredictions);
       }
     )
   }
@@ -76,10 +74,9 @@ export class PredictionResultsComponent implements OnInit {
   ngOnInit(): void {
     this.triageClasses = triageClasses;
     this.displayedIntervalColumns = [
-      'intervalNo',
       'startDate',
       'endDate',
-      ...this.triageClasses
+      'arrivals',
     ]
   }
 
