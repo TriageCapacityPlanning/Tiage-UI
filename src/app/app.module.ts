@@ -8,6 +8,7 @@ import {
   AgmCoreModule
 } from '@agm/core';
 import { CommonModule } from '@angular/common';
+import { DatePipe } from '@angular/common'
 
 // load material UI components
 import { MatButtonModule } from '@angular/material/button';
@@ -91,7 +92,8 @@ import { GetPredictionComponent, PredictionResultsComponent, GetPredictionUserIn
   ],
   providers: [
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

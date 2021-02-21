@@ -1,7 +1,11 @@
 .predictionFormClass {
     padding-bottom: 1em;
+    margin-top: 1em;
 }
 
+.intervalInputs{
+    overflow-y: scroll;
+}
 .intervalInput {
     width: 100%;
     margin-left: 1em;
