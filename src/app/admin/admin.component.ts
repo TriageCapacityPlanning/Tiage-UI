@@ -11,41 +11,70 @@ export class AdminComponent implements OnInit {
   trainingData: string;
   formMessage = '';
   numSimRuns: number;
+  triageClasses = [];
+  displayedColumns: string[] = ['severity', 'name', 'duration', 'proportion', 'actions'];
+  historicDataFile: File;
 
+  triageClassesEndpoint = 'http://localhost:5000/classes?';
+  uploadDataEndpoint = 'http://localhost:5000/upload/past-appointments';
   constructor(private http: HttpService) { }
 
-  /**
-   * Set class member to the value of the file string
-   * @param files some files uploaded in the UI
-   */
-  waitlistListener(files: FileList): void {
-    if (files && files.length > 0) {
-      const file: File = files.item(0);
-      const reader: FileReader = new FileReader();
-      reader.readAsText(file);
-      reader.onload = () => {
-        this.waitlist = reader.result as string;
-      }
+  getTriageClasses() {
+    const queryParams = { 'clinic_id': 1 }
+
+    this.http.get(this.triageClassesEndpoint, queryParams)
+      .subscribe((response) => {
+        this.triageClasses = response['classes'];
+      },
+        (error) => {
+          console.log("Could not retrieve triage classes")
+        }
+      )
+  }
+
+  updateTriageClass(triageClass) {
+    this.http.put(this.triageClassesEndpoint, { 'triage-class': triageClass })
+      // listen to data response
+      .subscribe(() => {
+        console.log('Triage Class Saved')
+      },
+        (error) => {
+          console.log('Could not save triage class changes')
+        }
+      )
+  }
+
+  uploadHistoricData() {
+    if (this.historicDataFile) {
+      let formData = new FormData();
+      formData.append('clinic_id', "1");
+      formData.append('upload_data', this.historicDataFile);
+
+      this.http.put(this.uploadDataEndpoint, formData)
+        .subscribe(() => {
+          console.log('Historic Data Uploaded')
+        },
+          (error) => {
+            console.log('Could not upload historic data')
+          })
     }
+
   }
 
   /**
    * Set class member to the value of the file string
    * @param files some files uploaded in the UI
    */
-  trainingDataListener(files: FileList): void {
+  historicDataListener(files: FileList): void {
     if (files && files.length > 0) {
-      const file: File = files.item(0);
-      const reader: FileReader = new FileReader();
-      reader.readAsText(file);
-      reader.onload = () => {
-        this.trainingData = reader.result as string;
-      }
+      this.historicDataFile = files.item(0);
     }
   }
+
 
   /* eslint-disable  @typescript-eslint/no-empty-function */
   ngOnInit(): void {
+    this.getTriageClasses();
   }
 
   /**

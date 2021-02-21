@@ -21,6 +21,10 @@ export class HttpService {
     return this.http.post(url, body);
   }
 
+  public put(url: string, body: unknown): Observable<Object> {
+    return this.http.put(url, body);
+  }
+
   public get(url: string, body: any): Observable<Object> {
     const params = new HttpParams({ fromObject: body })
     return this.http.get(url, { params: params });
