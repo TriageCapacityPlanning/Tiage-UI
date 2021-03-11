@@ -1,95 +1,31 @@
-
-  <div class="container-fluid" *ngIf="predictionResults">
-    <div class="row">
-        <h3>Prediction Results</h3>
+<div class="container-fluid" *ngIf="predictionResults">
+  <div class="card">
+    <div class="card-header text-white bg-dark">
+      <h4 class="card-title text-white">Prediction Results</h4>
     </div>
-    <div class="row">
-        <mat-label>Summary Interval Slot predictions</mat-label>
-        <br>
-        <table mat-table [dataSource]="summaryIntervalPredictions" class="interval-table">
-
-            <!--- Note that these columns can be defined in any order.
-                  The actual rendered columns are set as a property on the row definition" -->
-          
-            <!-- Position Column -->
-            <ng-container matColumnDef="intervalNo">
-              <th mat-header-cell *matHeaderCellDef> Interval No. </th>
-              <td mat-cell *matCellDef="let element"> {{element.intervalNo}} </td>
-            </ng-container>
-            
-            <!-- Start Date Column -->
+    <div class="card-body">
+      <mat-tab-group>
+        <mat-tab *ngFor="let triageClass of predictionResults.predictions | keyvalue" label="{{triageClass.key}}">
+          <table mat-table [dataSource]="predictionResults.predictions[triageClass.key]" class="interval-table">
             <ng-container matColumnDef="startDate">
               <th mat-header-cell *matHeaderCellDef> Start Date </th>
-              <td mat-cell *matCellDef="let element"> {{element.startDate}} </td>
+              <td mat-cell *matCellDef="let element">{{element.start_date}}</td>
             </ng-container>
-          
-            <!-- End Date Column -->
             <ng-container matColumnDef="endDate">
               <th mat-header-cell *matHeaderCellDef> End Date </th>
-              <td mat-cell *matCellDef="let element"> {{element.endDate}} </td>
+              <td mat-cell *matCellDef="let element">{{element.end_date}}</td>
             </ng-container>
-          
-            <!-- Triage Classes Columns -->
-            <div *ngFor="let triageClass of triageClasses; let i=index">
-                <ng-container matColumnDef="{{triageClass}}">
-                  <th mat-header-cell *matHeaderCellDef> {{triageClass}} </th>
-                  <td mat-cell *matCellDef="let element"> {{element[triageClass].slots}} </td>
-                </ng-container>
-            </div>
-          
-            <!-- Confidence Column -->
-            <ng-container matColumnDef="confidence">
-              <th mat-header-cell *matHeaderCellDef> Confidence (%) </th>
-              <td mat-cell *matCellDef="let element"> {{element.confidence}} </td>
+            <ng-container matColumnDef="arrivals">
+              <th mat-header-cell *matHeaderCellDef> Arrivals </th>
+              <td mat-cell *matCellDef="let element">{{element.slots}}</td>
             </ng-container>
-          
+            
 
             <tr mat-header-row *matHeaderRowDef="displayedIntervalColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedIntervalColumns;"></tr>
           </table>
+        </mat-tab>
+      </mat-tab-group>
     </div>
-    <!-- List each triage class's interval breakdown -->
-    <div class="row">
-        <div *ngFor="let tcIntervalPredction of tcIntervalPredictions; let i=index"class="interval-table">
-            <div>
-                <mat-label>{{triageClasses[i]}} Interval Slot predictions</mat-label>
-                <table mat-table [dataSource]="tcIntervalPredction" class="interval-table">
-                
-                    <!-- Position Column -->
-                    <ng-container matColumnDef="intervalNo">
-                    <th mat-header-cell *matHeaderCellDef> Interval No. </th>
-                    <td mat-cell *matCellDef="let element"> {{element.intervalNo}} </td>
-                    </ng-container>
-                    
-                    <!-- Start Date Column -->
-                    <ng-container matColumnDef="startDate">
-                    <th mat-header-cell *matHeaderCellDef> Start Date </th>
-                    <td mat-cell *matCellDef="let element"> {{element.startDate}} </td>
-                    </ng-container>
-                
-                    <!-- End Date Column -->
-                    <ng-container matColumnDef="endDate">
-                    <th mat-header-cell *matHeaderCellDef> End Date </th>
-                    <td mat-cell *matCellDef="let element"> {{element.endDate}} </td>
-                    </ng-container>
-                
-                    <!-- Triage Class slots column -->
-                    <ng-container matColumnDef="slots">
-                        <th mat-header-cell *matHeaderCellDef> Slots </th>
-                        <td mat-cell *matCellDef="let element"> {{element.slots}} </td>
-                    </ng-container>
-                
-                    <!-- Triage Class std dev column -->
-                    <ng-container matColumnDef="marginError">
-                        <th mat-header-cell *matHeaderCellDef> Std. Dev. </th>
-                        <td mat-cell *matCellDef="let element"> {{element.marginError}} </td>
-                    </ng-container>
-                
-        
-                    <tr mat-header-row *matHeaderRowDef="displayedtcIntervalColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedtcIntervalColumns;"></tr>
-                </table>
-            </div>
-        </div>
-    </div>
+  </div>
 </div>

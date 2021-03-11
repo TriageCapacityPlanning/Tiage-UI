@@ -1,8 +1,32 @@
 .predictionFormClass {
     padding-bottom: 1em;
+    margin-top: 1em;
+}
+
+.intervalInputs{
+    overflow-y: scroll;
+}
+.intervalInput {
+    width: 100%;
+    margin-left: 1em;
+    margin-right: 2em;
 }
 
 .intervalButtons {
     margin: 0.5em;
     border: none;
+}
+
+.formContent{
+    margin-top: 1em;
+    background: white !important;
+}
+
+.gridTile{
+    width: 100% !important;
+    height: 100%;
+    margin-top: 7em;
+    margin-left: 1em;
+    overflow-y: scroll;
+    padding-bottom: 5em;
 }

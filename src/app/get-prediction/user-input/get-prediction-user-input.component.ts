@@ -4,6 +4,7 @@ import { PredictionResults } from '../types';
 import { HttpService } from '../../http.service';
 import { GetPredictionService } from '../get-prediction.service';
 import { PredictionRequestBody } from './requestTypes';
+import { DatePipe } from '@angular/common'
 
 // TODO - get input dynamically from API
 const triageClasses: string[] = ['Urgent', 'Semi-Urgent', 'Standard'];
@@ -47,7 +48,7 @@ export class GetPredictionUserInputComponent implements OnInit {
   @ViewChild('fileInput') fileInput: ElementRef;
   fileAttr = 'Choose File';
 
-  constructor(private http: HttpService, private getPredictionService: GetPredictionService, private fb: FormBuilder) {
+  constructor(private http: HttpService, private getPredictionService: GetPredictionService, private fb: FormBuilder, public datepipe: DatePipe) {
     this.options = fb.group({
       floatLabel: this.floatLabelControl,
     })
@@ -61,7 +62,8 @@ export class GetPredictionUserInputComponent implements OnInit {
         start: this.fb.control,
         end: this.fb.control
       }),
-      confidence: this.fb.control(null, [Validators.required, Validators.min(0), Validators.max(100)]),
+      confidence: this.fb.control(null, [Validators.min(0), Validators.max(100)]),
+      numSimRuns: this.fb.control(null, [Validators.min(1), Validators.max(1000)]),
       triageClassesOptions: this.fb.array(
         this.triageClasses.map(() => this.fb.group({
           minServicePercent: this.fb.control('', [Validators.required]),
@@ -177,20 +179,26 @@ export class GetPredictionUserInputComponent implements OnInit {
       triageClassQueryParams[windowParam] = timeInWeeks.toString();
     })
 
+    var intervals = [];
+    formValues.intervalDateRanges.forEach(interval => {
+      intervals.push([this.datepipe.transform(interval.start, 'yyyy-MM-dd'),
+                      this.datepipe.transform(interval.end, 'yyyy-MM-dd')]);
+    });
+
+    console.log(formValues.confidence)
     // generate the post body
     const queryParams: PredictionRequestBody = {
-      'start-date': formValues.predictionDateRange.start,
-      'end-date': formValues.predictionDateRange.end,
+      'clinic-id': 1,
+      'intervals': JSON.stringify(intervals),
       'confidence': formValues.confidence || 95,
-      'num-sim-runs': formValues.numSimRuns || 1000,
-      ...triageClassQueryParams
+      'num-sim-runs': formValues.numSimRuns || 100
     }
 
-    if (this.csvFile) {
+    /*if (this.csvFile) {
       queryParams.waitlistcsv = this.csvFile;
-    }
+    }*/
     // get the API's response
-    this.http.post(endpoint, queryParams)
+    this.http.get(endpoint, queryParams)
       // listen to data response
       .subscribe((data: PredictionResults) => {
         this.getPredictionService.setPredictionResults({ ...data });
@@ -198,39 +206,46 @@ export class GetPredictionUserInputComponent implements OnInit {
         (error) => {
           // for testing purposes just return this dummy data for now until API is ready
           console.log(error)
-          const predictionResults: PredictionResults & { _url: string } = {
+          const predictionResults: PredictionResults = {
             _url: 'test',
-            intervaledSlotPredictions: [{
-              startDate: new Date('January 2030'),
-              endDate: new Date('February 2030'),
-              confidence: 95.0,
-              standardDeviation: 2,
-              total: 25 + 30 + 30,
-              urgent: { slots: 25, marginError: 2 },
-              'semi-urgent': { slots: 30, marginError: 2 },
-              standard: { slots: 30, marginError: 2 },
-            }, {
-              startDate: new Date('January 2030'),
-              endDate: new Date('March 2030'),
-              confidence: 95.0,
-              standardDeviation: 2,
-              total: 14 + 10 + 20,
-              urgent: { slots: 14, marginError: 1 },
-              'semi-urgent': { slots: 10, marginError: 0.5 },
-              standard: { slots: 20, marginError: 2 },
-            }],
-            numberIntervals: 2,
-            slotPredictions: {
-              startDate: new Date('January 2030'),
-              endDate: new Date('March 2030'),
-              confidence: 95.0,
-              standardDeviation: 2,
-              total: (25 + 30 + 30) + (14 + 10 + 20),
-              urgent: { slots: 25 + 14, marginError: 2 },
-              'semi-urgent': { slots: 30 + 10, marginError: 2 },
-              standard: { slots: 30 + 20, marginError: 2 },
+            predictions: {
+              urgent: [
+                {
+                  slots: 25,
+                  start_date: '2030-01-01',
+                  end_date: '2030-02-01'
+                },
+                {
+                  slots: 14,
+                  start_date: '2030-02-02',
+                  end_date: '2030-03-01'
+                }
+              ],
+              'semi-urgent': [
+                {
+                  slots: 30,
+                  start_date: '2030-01-01',
+                  end_date: '2030-02-01'
+                },
+                {
+                  slots: 10,
+                  start_date: '2030-02-02',
+                  end_date: '2030-03-01'
+                }
+              ],
+              standard: [
+                {
+                  slots: 30,
+                  start_date: '2030-01-01',
+                  end_date: '2030-02-01'
+                },
+                {
+                  slots: 10,
+                  start_date: '2030-02-02',
+                  end_date: '2030-03-01'
+                }
+              ]
             }
-
           }
           this.getPredictionService.setPredictionResults(predictionResults);
         }
