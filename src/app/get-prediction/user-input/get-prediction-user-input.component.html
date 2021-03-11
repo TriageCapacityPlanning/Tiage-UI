@@ -1,125 +1,81 @@
-
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="card-header text-white bg-dark">
-            <h4 class="card-title text-white">Prediction Parameters</h4>
-            <p class="card-category text-white">Specify the triage criteria</p>
-          </div>
-          <div class="card-body">
-            <form [formGroup]="predictionForm">
-              <!-- prediction range -->
-              <div class="predictionFormClass row col-md-5">
-                <mat-form-field >
-                  <mat-label>Prediction range</mat-label>
-                  <mat-date-range-input formGroupName="predictionDateRange" [rangePicker]="picker" required>
-                    <input matStartDate formControlName="start" placeholder="MM/DD/YYYY">
-                    <input matEndDate formControlName="end" placeholder="MM/DD/YYYY">
-                    <mat-hint>Hint</mat-hint>
-                  </mat-date-range-input>
-                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-date-range-picker #picker></mat-date-range-picker>
-                  <!-- <mat-error *ngIf="rootFormControls.predictionDateRange.controls.start.hasError('matStartDateInvalid') || rootFormControls.predictionDateRange.controls.start.invalid">Invalid start date</mat-error>
-                  <mat-error *ngIf="rootFormControls.predictionDateRange.controls.end.hasError('matEndDateInvalid') || rootFormControls.predictionDateRange.controls.end.invalid">Invalid end date</mat-error>
-                   -->
-                </mat-form-field>
-                
-              </div>
-              <!-- the level of statistical confidence at which a prediction is made -->
-              <div class="predictionFormClass">
+<mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel-header class="bg-dark">
+    <mat-panel-title class="text-white h4">
+      Prediction Parameters
+    </mat-panel-title>
+    <mat-panel-description class="text-white p">
+      Specify the triage criteria
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <div class="formContent">
+    <form [formGroup]="predictionForm">
+      <mat-grid-list cols="2" rowHeight="15em">
+        <mat-grid-tile>
+          <mat-grid-tile-header>Prediction Intervals</mat-grid-tile-header>
+          <div class="gridTile">
+            <div formArrayName="intervalDateRanges" class="predictionFormClass">
+              <div *ngFor="let temp of rootFormControls.intervalDateRanges.controls; let i=index" [formGroupName]="i">
                 <div class="row">
-                  <div class="col-md-5">
-                    <mat-form-field class="example-full-width" [floatLabel]="floatLabelControl.value">
-                      <mat-label>Confidence-level (%)</mat-label>
-                      <input matInput required matInput placeholder="95"
-                      formControlName="confidence" type="number" [ngClass]="{ 'is-invalid': submitted && rootFormControls.confidence.errors }" >
-                      <mat-hint>(0-100)</mat-hint>
-                    </mat-form-field>
-                    <mat-error *ngIf="rootFormControls.confidence.errors?.min">Input must be non-negative</mat-error>
-                    <mat-error *ngIf="rootFormControls.confidence.errors?.max">Input must be less than or equal to 100</mat-error>
-                  </div>
+                  <mat-form-field class="intervalInput">
+                    <mat-label>Interval {{i+1}}</mat-label>
+                    <mat-date-range-input [rangePicker]="picker" required>
+                      <input matStartDate formControlName="start" placeholder="MM/DD/YYYY">
+                      <input matEndDate formControlName="end" placeholder="MM/DD/YYYY">
+                      <mat-hint>Hint</mat-hint>
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                    <!-- <mat-error *ngIf="intervalrootFormControls.start.hasError('matStartDateInvalid') || rootFormControls.predictionDateRange.controls.start.invalid">Invalid start date</mat-error>
+                <mat-error *ngIf="rootFormControls.intervalDateRanges.controls.end.hasError('matEndDateInvalid') || rootFormControls.predictionDateRange.controls.end.invalid">Invalid end date</mat-error> -->
+                  </mat-form-field>
                 </div>
               </div>
-
-              <!-- Dynamically added intervals -->
-              <div>
-                <div formArrayName="intervalDateRanges" class="predictionFormClass">
-                  <mat-label>Interval Date Ranges</mat-label>
-                  <div *ngFor="let temp of rootFormControls.intervalDateRanges.controls; let i=index" [formGroupName]="i">
-                    <div class="row col-md-5">
-                      <mat-form-field >
-                        <mat-label>Interval {{i+1}}</mat-label>
-                        <mat-date-range-input [rangePicker]="picker" required>
-                          <input matStartDate formControlName="start" placeholder="MM/DD/YYYY">
-                          <input matEndDate formControlName="end" placeholder="MM/DD/YYYY">
-                          <mat-hint>Hint</mat-hint>
-                        </mat-date-range-input>
-                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                        <mat-date-range-picker #picker></mat-date-range-picker>
-                        <!-- <mat-error *ngIf="intervalrootFormControls.start.hasError('matStartDateInvalid') || rootFormControls.predictionDateRange.controls.start.invalid">Invalid start date</mat-error>
-                        <mat-error *ngIf="rootFormControls.intervalDateRanges.controls.end.hasError('matEndDateInvalid') || rootFormControls.predictionDateRange.controls.end.invalid">Invalid end date</mat-error> -->
-                        
-                      </mat-form-field>
-                    </div>
-                  </div>
-                  <!-- editing the intervals -->
-                  <button mat-icon-button (click)="addIntervalDateRange()" type="button" aria-label="Add an interval"
-                    color="primary" class="intervalButtons" matTooltip="Add intervals">
-                    <mat-icon>add</mat-icon>
-                  </button>
-                  <button mat-icon-button (click)="resetIntervalDateRange()" type="button" aria-label="Reset all intervals"
-                    color="warn" class="intervalButtons" matTooltip="Clear all">
-                    <mat-icon>clear</mat-icon>
-                  </button>
-                  <br>
-                </div>
-                <!-- ERROR -->
-              </div>
-              
-              <!-- Dynamically load the triage class options based on user prefereces -->
-              <div formArrayName="triageClassesOptions" class="predictionFormClass">
-                <mat-label>Triage Classes Options</mat-label>
-                <div *ngFor="let triageClass of triageClasses; let i=index" [formGroupName]="i" class="triageClassOptions">
-                  <div>
-                    <mat-label>{{triageClasses[i]}} Patient Criteria</mat-label>
-                    <div class="row">
-                      <div class="col-md-5">
-                        <mat-form-field class="example-full-width" [floatLabel]="floatLabelControl.value">
-                          <mat-label >Minimum Service Percent (%)</mat-label>
-                          <input required matInput type="number"
-                             formControlName="minServicePercent">
-                             <mat-hint>(0-100)</mat-hint>
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-3">
-                        <mat-form-field class="example-full-width" [floatLabel]="floatLabelControl.value">
-                          <mat-label >Time window</mat-label>
-                          <input required matInput type="number" formControlName="timeWindow">
-                        </mat-form-field>
-                      </div>
-                      <div class="col-md-2">
-                        <mat-form-field matInput required class="example-full-width">
-                          <mat-label>Unit Time</mat-label>
-                          <mat-select formControlName="timeUnit">
-                            <mat-option value="{{week}}">Week(s)</mat-option>
-                            <mat-option value="{{day}}">Day(s)</mat-option>
-                          </mat-select>
-                        </mat-form-field>
-                      </div>
-                    </div>
-                  </div>
-  
-                </div>
-              </div>
-
-              <div>
-                <input type="file" class="upload" (change)="csvListener($event.target.files)">
-              </div>
-              <button mat-raised-button type="submit" class="btn bg-primary text-white pull-right" (click)="getPrediction()">Get Prediction</button>
-            </form>
+            </div>
+            <button mat-icon-button (click)="addIntervalDateRange()" type="button" aria-label="Add an interval"
+              color="primary" class="intervalButtons" matTooltip="Add intervals">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button mat-icon-button (click)="resetIntervalDateRange()" type="button" aria-label="Reset all intervals"
+              color="warn" class="intervalButtons" matTooltip="Clear all">
+              <mat-icon>clear</mat-icon>
+            </button>
           </div>
-        </div>
-      </div>
-    </div>
+        </mat-grid-tile>
+        <mat-grid-tile>
+          <div class="gridTile">
+            <mat-grid-tile-header>Prediction Parameters</mat-grid-tile-header>
+            <mat-form-field class="example-full-width" [floatLabel]="floatLabelControl.value">
+              <mat-label>Confidence-level (%)</mat-label>
+              <input matInput required matInput placeholder="95" formControlName="confidence" type="number"
+                [ngClass]="{ 'is-invalid': submitted && rootFormControls.confidence.errors }">
+              <mat-hint>(0-100)</mat-hint>
+            </mat-form-field>
+            <mat-error *ngIf="rootFormControls.confidence.errors?.min">Input must be non-negative</mat-error>
+            <mat-error *ngIf="rootFormControls.confidence.errors?.max">Input must be less than or equal to 100
+            </mat-error>
+
+            <mat-form-field class="example-full-width" [floatLabel]="floatLabelControl.value">
+              <mat-label>Number of simulations</mat-label>
+              <input matInput required matInput placeholder="1000" formControlName="numSimRuns" type="number"
+                [ngClass]="{ 'is-invalid': submitted && rootFormControls.numSimRuns.errors }">
+              <mat-hint>(0-100)</mat-hint>
+            </mat-form-field>
+            <mat-error *ngIf="rootFormControls.numSimRuns.errors?.min">Input must be non-negative</mat-error>
+            <mat-error *ngIf="rootFormControls.numSimRuns.errors?.max">Input must be less than or equal to 100
+            </mat-error>
+
+            <br>
+            <!--<mat-form-field class="example-full-width">
+              <mat-label>Upload Waitlist</mat-label>
+              <input type="file" class="upload" (change)="csvListener($event.target.files)">
+            </mat-form-field> -->
+
+          </div>
+        </mat-grid-tile>
+      </mat-grid-list>
+      <button mat-raised-button type="submit" class="btn bg-primary text-white pull-right" (click)="getPrediction()">Get
+        Prediction</button>
+    </form>
   </div>
+
+</mat-expansion-panel>

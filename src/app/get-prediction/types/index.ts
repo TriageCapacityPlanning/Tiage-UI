@@ -1,19 +1,14 @@
 export interface PredictionResults {
-    intervaledSlotPredictions: SlotPredictions[],
-    numberIntervals: number,
-    slotPredictions: SlotPredictions
+    predictions: TriageClassPredictions,
+    _url: string
 }
 
-
-export interface TriageClassCount  { slots: number, marginError: number }
-
-export interface TriageClassCountsWrapper {
-    [index: string]: TriageClassCount | number | Date;
+export interface IntervalPrediction {
+    slots: number;
+    start_date: string;
+    end_date: string;
 }
 
-export type SlotPredictions = {
-    startDate: Date,
-    endDate: Date,
-    confidence: number,
-    total: number
-} & TriageClassCountsWrapper;
+export type TriageClassPredictions = {
+    [index: string]: IntervalPrediction[]
+}

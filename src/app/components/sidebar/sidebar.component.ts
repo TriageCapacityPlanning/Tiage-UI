@@ -10,7 +10,8 @@ export declare interface RouteInfo {
     class: string;
 }
 export const ROUTES: RouteInfo[] = [
-    { path: '/interval-prediction', title: 'Interval Prediction',  icon: 'dashboard', class: '' }
+    { path: '/interval-prediction', title: 'Interval Prediction',  icon: 'dashboard', class: '' },
+    { path: '/admin', title: 'Admin: Clinic 1',  icon: 'settings', class: '' }
 ];
 
 @Component({
