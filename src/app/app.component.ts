@@ -40,22 +40,13 @@ export class AppComponent {
          }
       });
       this._router = this.router.events.filter(event => event instanceof NavigationEnd).subscribe(() => {
-           elemMainPanel.scrollTop = 0;
-           elemSidebar.scrollTop = 0;
+           //elemMainPanel.scrollTop = 0;
+           //elemSidebar.scrollTop = 0;
       });
 
   }
   ngAfterViewInit(): void {
       this.runOnRouteChange();
-  }
-  isMaps(path: string): boolean {
-      let titlee = this.location.prepareExternalUrl(this.location.path());
-      titlee = titlee.slice( 1 );
-      if (path === titlee) {
-          return false;
-      } else {
-          return true;
-      }
   }
   runOnRouteChange(): void {
     if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {

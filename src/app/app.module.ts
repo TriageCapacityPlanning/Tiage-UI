@@ -24,6 +24,10 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatTableModule} from '@angular/material/table';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 
 // load app data
 import { AppRoutingModule, BaseRoutes } from './app.routing';
@@ -36,6 +40,9 @@ import { HelpComponent } from './help/help.component';
 import { DocumentationComponent } from './documentation/documentation.component';
 import { DocpredictionComponent } from './documentation/docprediction/docprediction.component';
 import { GetPredictionComponent, PredictionResultsComponent, GetPredictionUserInputComponent } from './get-prediction';
+import { LoginComponent } from './login/login.component';
+import { NavComponent } from './nav/nav.component';
+import { BaseComponent } from './base/base.component';
 
 
 @NgModule({
@@ -47,12 +54,10 @@ import { GetPredictionComponent, PredictionResultsComponent, GetPredictionUserIn
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'YOUR_GOOGLE_MAPS_API_KEY'
-    }),
-    // angular models to use throughout the application
     CommonModule,
     RouterModule.forChild(BaseRoutes),
+    MatToolbarModule,
+    MatMenuModule
   ],
   declarations: [
     AppComponent,
@@ -63,8 +68,10 @@ import { GetPredictionComponent, PredictionResultsComponent, GetPredictionUserIn
     GetPredictionComponent,
     AdminComponent,
     PredictionResultsComponent,
-    GetPredictionUserInputComponent
-
+    GetPredictionUserInputComponent,
+    LoginComponent,
+    NavComponent,
+    BaseComponent,
   ],
   exports: [
     // export Material UI components. See https://material.angular.io/

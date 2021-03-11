@@ -5,7 +5,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { HelpComponent } from './help/help.component';
 import { DocumentationComponent } from './documentation/documentation.component';
 import { AdminComponent } from './admin/admin.component';
+import { LoginComponent } from './login/login.component';
 import { GetPredictionComponent } from './get-prediction';
+import { BaseComponent } from './base/base.component';
 
 import { AppComponent } from './app.component';
 
@@ -22,6 +24,7 @@ export declare interface ComponentRouteInfo extends Route {
 export const BaseRoutes: ComponentRouteInfo[] = [
     { path: 'interval-prediction', component: GetPredictionComponent },
     { path: 'admin',   component: AdminComponent, title: 'Admin Settings' },
+    { path: 'login',   component: LoginComponent, title: 'Login' },
     { path: 'help',  component: HelpComponent, title: 'Help' },
     { path: 'docs',  component: DocumentationComponent, title: 'Documentation' }
 ];
@@ -29,7 +32,7 @@ export const BaseRoutes: ComponentRouteInfo[] = [
 // Router service configuration
 const routes: Routes = [{
     path: '',
-    component: AppComponent,
+    component: BaseComponent,
   }
 ];
 

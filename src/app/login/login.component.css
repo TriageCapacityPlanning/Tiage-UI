@@ -1,0 +1,17 @@
+.login-content{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-card{
+    max-width: 30%;
+    min-width: 200px;
+}
+
+.sign-in-button{
+    display: block;
+    margin: 0 auto;
+}

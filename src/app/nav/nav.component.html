@@ -1,0 +1,23 @@
+<mat-toolbar class="bg-dark text-white">
+   <span class="baseline">Triage</span>
+   <button routerLink="/interval-prediction" mat-icon-button class="route-button baseline" aria-label="Example icon-button with heart icon">
+    Predict
+  </button>
+  <button routerLink="/admin" mat-icon-button class="route-button baseline" aria-label="Example icon-button with heart icon">
+    Admin
+  </button>
+   <span class="example-spacer"></span>
+   <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon" [matMenuTriggerFor]="menu">
+     <mat-icon matTooltip="My Account">manage_accounts</mat-icon>
+   </button>
+   <mat-menu #menu="matMenu">
+    <div>
+      <p>Daniel</p>
+      <p>Clinic: 1</p>
+    </div>
+    <button mat-menu-item>Sign Out</button>
+  </mat-menu>
+   <button routerLink="help" mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon matTooltip="Help">help</mat-icon>
+  </button>
+ </mat-toolbar>
