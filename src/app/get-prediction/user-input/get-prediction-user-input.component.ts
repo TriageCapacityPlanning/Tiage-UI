@@ -204,7 +204,7 @@ export class GetPredictionUserInputComponent implements OnInit {
         this.getPredictionService.setPredictionResults({ ...data });
       },
         (error) => {
-          // for testing purposes just return this dummy data for now until API is ready
+          // default error data
           console.log(error)
           const predictionResults: PredictionResults = {
             _url: 'test',
